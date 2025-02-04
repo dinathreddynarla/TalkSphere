@@ -1,24 +1,20 @@
-import React, { useState } from 'react';
-import ZegoMeeting from './ZegoMeeting'; // Import the ZegoMeeting component
-import '../Styles/HomePage.css'; // Add a CSS file for HomePage styling
-
+import React from 'react'
+import { useState ,useCallback} from 'react';
+import { useNavigate } from 'react-router-dom';
+import '../Styles/HomePage.css';
 const HomePage = () => {
-    const [roomID, setRoomID] = useState(""); // State to store the room ID
-    const [isJoined, setIsJoined] = useState(false); // State to check if meeting is joined
-
+    const [roomID, setRoomID] = useState("");
+    const navigate = useNavigate()
     const handleRoomIDChange = (e) => {
-        setRoomID(e.target.value); // Update the room ID when the user types
+        setRoomID(e.target.value); 
     };
 
-    const handleJoin = () => {
-        if (roomID) {
-            setIsJoined(true); // Set the state to true to show the meeting
-        }
-    };
+    const handleJoin = useCallback(()=>{
+        navigate(`/room/${roomID}`)
+    },[navigate,roomID])
 
     return (
         <div className="home-page">
-            {!isJoined ? (
                 <div className="home-content">
                     <div className="buttons">
                         {/* Meeting ID input and Join button */}
@@ -40,12 +36,9 @@ const HomePage = () => {
                         </video>
                     </div>
                 </div>
-            ) : (
-                // Once the meeting is joined, display the Zego meeting
-                <ZegoMeeting roomID={roomID} />
-            )}
         </div>
     );
 };
 
-export default HomePage;
+
+export default HomePage

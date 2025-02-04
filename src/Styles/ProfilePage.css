@@ -1,0 +1,75 @@
+.profile-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f4f4f4;
+}
+
+.profile-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 400px;
+}
+
+.profile-picture {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #007bff;
+    margin-bottom: 1rem;
+}
+
+.profile-info {
+    margin-bottom: 1rem;
+}
+
+.profile-info p {
+    display: flex;
+    justify-content: space-between;
+    background: #f9f9f9;
+    padding: 10px;
+    border-radius: 6px;
+    margin: 5px 0;
+    font-size: 14px;
+}
+
+.profile-info input {
+    width: 100%;
+    padding: 5px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.profile-actions {
+    display: flex;
+    flex-direction: column;
+    margin-top: 1rem;
+}
+
+button {
+    border: none;
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.password-change-btn {
+    background-color: #ffc107;
+    color: #333;
+}
+
+.logout-btn {
+    background-color: #dc3545;
+    color: white;
+}
+
+button:hover {
+    opacity: 0.85;
+}

@@ -39,7 +39,7 @@ const LandingPage = () => {
             return;
         }
         try {
-            await signupWithEmailPassword(email, password);
+            await signupWithEmailPassword(name,email, password);
             console.log("Signup successful!");
             setIsLoginForm(true); // Switch to login form after successful signup
         } catch (error) {
