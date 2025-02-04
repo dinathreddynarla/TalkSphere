@@ -20,7 +20,7 @@ const Room = () => {
       try {
         const session = JSON.parse(localStorage.getItem("session"));
         if (!session || !session.token) {
-          navigate("/login");
+          navigate("/");
           return;
         }
         setToken(session.token);
