@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { logout } from "../services/authService";
 import { getUser } from "../services/userService";
-import "../styles/ProfilePage.css";
+import "../Styles/ProfilePage.css"
 import { FaEdit } from "react-icons/fa";
 
 const ProfilePage = () => {
