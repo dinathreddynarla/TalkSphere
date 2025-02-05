@@ -20,9 +20,11 @@ const Room = () => {
       try {
         const session = JSON.parse(localStorage.getItem("session"));
         if (!session || !session.token) {
+          localStorage.setItem("roomID" ,roomID)      
           navigate("/");
           return;
         }
+        localStorage.removeItem("roomID")
         setToken(session.token);
         const response = await getUser(session.token);
         setUser(response);

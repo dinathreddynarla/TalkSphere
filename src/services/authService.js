@@ -62,6 +62,7 @@ export const guestLogin = async () => {
         const userCredential = await signInAnonymously(auth);
         const user = userCredential.user; // Extract the user from the response
         const token = await user.getIdToken()
+        createUser(token,user.uid ,"guest@gmail.com" ,"guest")
         // Store the user UID in localStorage
         localStorage.setItem("session", JSON.stringify({ uid: user.uid , token , email : user.email }));
     } catch (error) {

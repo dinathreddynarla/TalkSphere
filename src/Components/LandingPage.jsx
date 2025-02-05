@@ -9,6 +9,7 @@ const LandingPage = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [name, setName] = useState("");
+    const [roomID , setRoomID] = useState(null)
     const [confirmPassword, setConfirmPassword] = useState("");
     const navigate = useNavigate(); // Hook to navigate programmatically
 
@@ -17,6 +18,11 @@ const LandingPage = () => {
     };
     useEffect(() => {
         const session = JSON.parse(localStorage.getItem("session"));
+        const roomSession = localStorage.getItem("roomID")
+
+        if(roomSession){
+            setRoomID(roomSession)
+        }
         if (session) {      
             navigate("/dashboard");
         }
@@ -26,7 +32,12 @@ const LandingPage = () => {
         try {
             await loginWithEmailPassword(email, password);
             console.log("Login successful!");
-            navigate("/dashboard"); // Redirect to dashboard after successful login
+            if(roomID){
+                navigate(`/room/${roomID}`)
+            }else {
+                navigate("/dashboard"); // Redirect to dashboard after successful login
+            }
+            
         } catch (error) {
             alert("Login failed! Please check your credentials.");
         }
@@ -51,7 +62,12 @@ const LandingPage = () => {
         try {
             await loginWithGoogle();
             console.log("Google login successful!");
-            navigate("/dashboard"); // Redirect to dashboard after Google login
+            if(roomID){
+                navigate(`/room/${roomID}`)
+            }else {
+                navigate("/dashboard"); // Redirect to dashboard after successful login
+            }
+            
         } catch (error) {
             alert("Google login failed!");
         }
@@ -61,7 +77,11 @@ const LandingPage = () => {
         try {
             await guestLogin();
             console.log("Guest login successful!");
-            navigate("/dashboard"); // Redirect to dashboard after guest login
+            if(roomID){
+                navigate(`/room/${roomID}`)
+            }else {
+                navigate("/dashboard"); // Redirect to dashboard after successful login
+            }
         } catch (error) {
             alert("Guest login failed!");
         }
