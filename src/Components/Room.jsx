@@ -64,8 +64,8 @@ const Room = () => {
           appID,
           serverSecret,
           roomID,
-          Date.now().toString(),
-          user.name
+          user.uid,
+          user.name || "Guest"
         );
 
         zpInstance = ZegoUIKitPrebuilt.create(kitToken);
