@@ -1,8 +1,3 @@
-/* General Body Styling */
-
-
-/* Header Styling */
-
 
 .brand-name {
     margin: 0;
@@ -34,8 +29,8 @@
     text-decoration: underline;
 }
 
-/* Main Content Box Styling */
-.main-content {
+Main Content Box Styling
+ .main-content {
     padding: 20px;
 }
 
@@ -77,8 +72,8 @@
     width: 60%;
 }
 
-video {
+/* video {
     border-radius: 8px;
     width: 100%;
     max-width: 500px;
-}
+} */
