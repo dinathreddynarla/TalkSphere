@@ -27,7 +27,7 @@ export const signupWithEmailPassword = async (name,email, password) => {
         const user = userCredential.user; // Extract the user from the response
         const token = await user.getIdToken()
 
-        createUser(token,user.uid,email,name)
+       await createUser(token,user.uid,email,name)
     } catch (error) {
         console.error("Signup failed:", error.message);
         throw error;
@@ -62,7 +62,8 @@ export const guestLogin = async () => {
         const userCredential = await signInAnonymously(auth);
         const user = userCredential.user; // Extract the user from the response
         const token = await user.getIdToken()
-        createUser(token,user.uid ,"guest@gmail.com" ,"guest")
+
+       await createUser(token,user.uid ,"guest@gmail.com" ,"guest")
         // Store the user UID in localStorage
         localStorage.setItem("session", JSON.stringify({ uid: user.uid , token , email : user.email }));
     } catch (error) {
