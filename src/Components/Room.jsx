@@ -29,7 +29,7 @@ const Room = () => {
         const response = await getUser(session.token);
         setUser(response);
         console.log(response);
-      } catch (error) {
+      } catch (error) { 
         console.error("Error fetching profile:", error);
       }
     };
@@ -66,8 +66,8 @@ const Room = () => {
           appID,
           serverSecret,
           roomID,
-          user.uid,
-          user.name || "Guest"
+          user.uid??Date.now().toString(),
+          user.name??"Guest"
         );
 
         zpInstance = ZegoUIKitPrebuilt.create(kitToken);

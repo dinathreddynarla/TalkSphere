@@ -63,9 +63,8 @@ export const guestLogin = async () => {
         const user = userCredential.user; // Extract the user from the response
         const token = await user.getIdToken()
 
-       await createUser(token,user.uid ,"guest@gmail.com" ,"guest")
         // Store the user UID in localStorage
-        localStorage.setItem("session", JSON.stringify({ uid: user.uid , token , email : user.email }));
+        localStorage.setItem("session", JSON.stringify({ uid: user.uid , token }));
     } catch (error) {
         console.error("Guest login failed:", error.message);
         throw error;
