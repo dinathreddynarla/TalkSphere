@@ -45,7 +45,7 @@ const Room = () => {
       if (!token) return;
       try {
         const response = await axios.get(
-          `https://talksphere-nyay.onrender.com/api/meetings/${roomID}`,
+          `https://talksphere-nyay.onrender.com/meetings/${roomID}`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
         console.log(response.data);

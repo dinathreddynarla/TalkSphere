@@ -8,7 +8,7 @@ export const createUser = async(token,uid,email,name ="Guest") =>{
     }
     try{
         // Create new user
-       let response = await axios.post("https://talksphere-nyay.onrender.com/api/users",data, {
+       let response = await axios.post("https://talksphere-nyay.onrender.com/users",data, {
             headers: {
               Authorization: `Bearer ${token}`
             }
@@ -24,7 +24,7 @@ export const getUser = async(token) =>{
    
     try{
         // Create new user
-       let response =  await axios.get("https://talksphere-nyay.onrender.com/api/users", {
+       let response =  await axios.get("https://talksphere-nyay.onrender.com/users", {
             headers: {
               Authorization: `Bearer ${token}`
             }

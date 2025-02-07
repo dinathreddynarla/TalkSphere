@@ -32,7 +32,7 @@ const MeetingsPage = () => {
   const fetchMeetings = async () => {
     try {
       if(!token) return;
-      const response = await axios.get("https://talksphere-nyay.onrender.com/api/meetings", {
+      const response = await axios.get("https://talksphere-nyay.onrender.com/meetings", {
         headers: { Authorization: `Bearer ${token}` }
       });
       setMeetings(response.data);
@@ -61,12 +61,12 @@ const MeetingsPage = () => {
     try {
       if (editingMeeting) {
         await axios.put(
-          `https://talksphere-nyay.onrender.com/api/meetings/${editingMeeting._id}`,
+          `https://talksphere-nyay.onrender.com/meetings/${editingMeeting._id}`,
           formData,
           { headers: { Authorization: `Bearer ${token}` } }
         );
       } else {
-        await axios.post("https://talksphere-nyay.onrender.com/api/meetings", formData, {
+        await axios.post("https://talksphere-nyay.onrender.com/meetings", formData, {
           headers: { Authorization: `Bearer ${token}` }
         });
       }
@@ -80,9 +80,11 @@ const MeetingsPage = () => {
     }
   };
 
-  const handleDelete = async id => {
+  const handleDelete = async (id) => {
     try {
-      await axios.delete(`https://talksphere-nyay.onrender.com/api/meetings/${id}`, {
+      console.log("hello");
+      
+      await axios.delete(`https://talksphere-nyay.onrender.com/meetings/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       fetchMeetings();
