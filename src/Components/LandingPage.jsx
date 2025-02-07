@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom"; // Import useNavigate hook
 import { loginWithEmailPassword, signupWithEmailPassword, loginWithGoogle, guestLogin } from "../services/authService";
 import "../Styles/LandingPage.css"; // Import the CSS file
 import Logo from "../assets/logo.png"; // Update with the correct path to your logo file
+import Cookies from "js-cookie";
 
 const LandingPage = () => {
     const [isLoginForm, setIsLoginForm] = useState(true);
@@ -17,7 +18,11 @@ const LandingPage = () => {
         setIsLoginForm((prev) => !prev);
     };
     useEffect(() => {
-        const session = JSON.parse(localStorage.getItem("session"));
+         const cookie = Cookies.get("session")
+        const session = cookie ? JSON.parse(cookie) : null ;
+        console.log(session);
+        
+        // const session = JSON.parse(localStorage.getItem("session"));
         const roomSession = localStorage.getItem("roomID")
 
         if(roomSession){

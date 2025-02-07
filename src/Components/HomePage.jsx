@@ -2,13 +2,19 @@ import React from 'react'
 import { useState ,useCallback} from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../Styles/HomePage.css';
+import Cookies from "js-cookie";
 const HomePage = () => {
     const [roomID, setRoomID] = useState("");
     const navigate = useNavigate()
     const handleRoomIDChange = (e) => {
         setRoomID(e.target.value); 
     };
-
+    const cookie = Cookies.get("session")
+    const session = cookie ? JSON.parse(cookie) : null ;
+    if (!session) {
+        navigate("/");
+        return;
+    }
     const handleJoin = useCallback(()=>{
         navigate(`/room/${roomID}`)
     },[navigate,roomID])

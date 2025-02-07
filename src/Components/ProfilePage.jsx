@@ -4,6 +4,7 @@ import { logout } from "../services/authService";
 import { getUser } from "../services/userService";
 import "../Styles/ProfilePage.css"
 import { FaEdit } from "react-icons/fa";
+import Cookies from "js-cookie";
 
 const ProfilePage = () => {
     const navigate = useNavigate();
@@ -14,9 +15,13 @@ const ProfilePage = () => {
     useEffect(() => {
         const fetchUserProfile = async () => {
             try {
-                const session = JSON.parse(localStorage.getItem("session"));
+                const cookie = Cookies.get("session")
+                const session = cookie ? JSON.parse(cookie) : null ;
+                console.log(session)
+
+                // const session = JSON.parse(localStorage.getItem("session"));
                 if (!session || !session.token) {
-                    navigate("/login");
+                    navigate("/");
                     return;
                 }
                 const response = await getUser(session.token);

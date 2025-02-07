@@ -5,6 +5,7 @@ import { APP_ID, SERVER_SECRET } from './constants';
 import { getUser } from "../services/userService";
 import axios from "axios";
 import { useState, useEffect } from 'react';
+import Cookies from "js-cookie";
 
 const Room = () => {
   const { roomID } = useParams();
@@ -18,7 +19,9 @@ const Room = () => {
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
-        const session = JSON.parse(localStorage.getItem("session"));
+         const cookie = Cookies.get("session")
+         const session = cookie ? JSON.parse(cookie) : null ;
+        // const session = JSON.parse(localStorage.getItem("session"));
         if (!session || !session.token) {
           localStorage.setItem("roomID" ,roomID)      
           navigate("/");

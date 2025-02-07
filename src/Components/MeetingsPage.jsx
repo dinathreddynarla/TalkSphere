@@ -4,26 +4,34 @@ import axios from "axios";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "../Styles/MeetingsPage.css";
+import Cookies from "js-cookie";
 
 const MeetingsPage = () => {
   const [meetings, setMeetings] = useState([]);
   const [showModal, setShowModal] = useState(false);
+  const [token , setToken] = useState(null)
   const [formData, setFormData] = useState({
     title: "",
     description: "",
     date: new Date(),
     duration: ""
   });
+  
+  
   const [editingMeeting, setEditingMeeting] = useState(null);
   const navigate = useNavigate()
   const handleJoin = useCallback((roomID)=>{
           navigate(`/room/${roomID}`)
       },[navigate])
-
-  let token = JSON.parse(localStorage.getItem("session")).token;
+  
+    
+ 
+  
+  // let token = JSON.parse(localStorage.getItem("session")).token;
 
   const fetchMeetings = async () => {
     try {
+      if(!token) return;
       const response = await axios.get("https://talksphere-nyay.onrender.com/api/meetings", {
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -33,10 +41,20 @@ const MeetingsPage = () => {
     }
   };
 
+  const cookie = Cookies.get("session")
+  const session = cookie ? JSON.parse(cookie) : null ;
   useEffect(() => {
+      if (session) {
+        setToken(session.token);
+        
+      } else {
+        navigate("/");
+      }
+    }, [session, navigate]);
+  useEffect(()=>{
+    console.log(token); 
     fetchMeetings();
-  },[meetings]);
-
+  },[token])
   const handleFormSubmit = async e => {
     e.preventDefault();
 
@@ -83,7 +101,8 @@ const MeetingsPage = () => {
     });
     setShowModal(true);
   };
-
+  console.log(token);
+  
   return (
     <div className="meetings-container">
       <h1 className="meetings-title">Meetings</h1>

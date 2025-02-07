@@ -1,5 +1,6 @@
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, signInAnonymously ,signOut } from "firebase/auth";
 import { auth } from "./firebaseConfig";
+import Cookies from "js-cookie";
 import { createUser, getUser } from "./userService";
 // Login with email/password
 export const loginWithEmailPassword = async (email, password) => {
@@ -10,8 +11,9 @@ export const loginWithEmailPassword = async (email, password) => {
         console.log(token);
         
         getUser(token)
-        // Store the user UID in localStorage
-        localStorage.setItem("session", JSON.stringify({ uid: user.uid , token , email : user.email }));
+        // Set cookie with 1 hour expiration
+        const sessionData = { uid: user.uid, token: token };
+        Cookies.set("session", JSON.stringify(sessionData), { expires: 1 / 24 });
     } catch (error) {
         console.error("Login failed:", error.message);
         throw error;
@@ -49,7 +51,9 @@ export const loginWithGoogle = async () => {
             console.log("User not found, creating new user...");
             await createUser(token, user.uid, user.email, user.displayName);
         }
-        localStorage.setItem("session", JSON.stringify({ uid: user.uid , token , email : user.email }));
+        // Set cookie with 1 hour expiration
+        const sessionData = { uid: user.uid, token: token };
+        Cookies.set("session", JSON.stringify(sessionData), { expires: 1 / 24 });
     } catch (error) {
         console.error("Google login failed:", error.message);
         throw error;
@@ -63,8 +67,9 @@ export const guestLogin = async () => {
         const user = userCredential.user; // Extract the user from the response
         const token = await user.getIdToken()
 
-        // Store the user UID in localStorage
-        localStorage.setItem("session", JSON.stringify({ uid: user.uid , token }));
+         // Set cookie with 1 hour expiration
+         const sessionData = { uid: user.uid, token: token };
+         Cookies.set("session", JSON.stringify(sessionData), { expires: 1 / 24 });
     } catch (error) {
         console.error("Guest login failed:", error.message);
         throw error;
@@ -75,8 +80,8 @@ export const guestLogin = async () => {
 export const logout = async () => {
     try {
         await signOut(auth);
-        // Clear session from localStorage
-        localStorage.removeItem("session");
+        // Clear session from Cookies
+        Cookies.remove("session");
     } catch (error) {
         console.error("Logout failed:", error.message);
         throw error;
