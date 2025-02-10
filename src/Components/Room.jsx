@@ -57,11 +57,30 @@ const Room = () => {
     fetchMeeting();
   }, [roomID, token]);
 
+  const joinMeet =  async (email, id) =>{
+    try {
+        const response = await axios.post(
+          `https://talksphere-nyay.onrender.com/meetings/joinmeet/${id}`,{email :email},
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        console.log(response);
+
+      } catch (error) {
+        console.error("Error fetching meetings:", error);
+      }
+  }
+
   // Join room using ZEGOCLOUD
   useEffect(() => {
     const myMeeting = async () => {
       if (!user || !meeting) return;
       let isHost = user.uid==meeting.host ? true : false ;
+
+      if(!isHost){
+        let userEmail = user.email??"anonymususer@gmail.com";
+        let meetID = roomID;
+        joinMeet(userEmail, meetID)
+      }
       try {
         const appID = APP_ID;
         const serverSecret = SERVER_SECRET;
