@@ -1,216 +1,123 @@
-/* General Styles */
-body, html {
+/* Reset default margin and padding */
+body {
   margin: 0;
   padding: 0;
-  font-family: 'Roboto', sans-serif; /* A more modern font */
+  font-family: Arial, sans-serif;
   box-sizing: border-box;
   width: 100%;
-  height: 100%;
+  height: 100vh;
+  overflow: hidden;
 }
 
-.landing-page {
+/* Ensures the entire page takes full height */
+.landing-container {
   display: flex;
   flex-direction: column;
-  width: 100%;
-  height: 100vh;
-  background-color: #f5f5f5; /* Light background for a soft overall look */
-}
-
-/* Header Section */
-.header {
-  display: flex;
-  justify-content: center;
   align-items: center;
-  gap: 10%;
-  padding: 16px;
-  background-color: #2D6A4F; /* Logo color */
-  color: white;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  justify-content: center;
+  height: 100vh;
+  background-color: #E9F5F2; /* Matches logo's light color */
 }
 
-.brand-name {
-  font-size: 1.5rem;
+/* Larger Title */
+.title {
+  margin: 0;
+  text-align: center;
+  margin-bottom: 10px;
+  font-size: 3rem;  /* Increased font size */
+  color: #2D6A4F; /* Dark green */
   font-weight: bold;
 }
 
-/* Main Section */
-.main-section {
+/* Content layout */
+.content-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 80%;
+  max-width: 1200px;
+  height: 70%;  /* Makes sure it takes full height */
+}
+
+/* Enlarged Logo */
+.logo-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-grow: 1;
-  padding: 20px;
-  background-color: #E9F5F2; /* Matches logo's light color */
-  height: 100%;
-}
-
-.logo-section {
-  width: 50%;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
+  flex: 1;
 }
 
 .logo {
-  max-width: 90%;
+  max-width: 100%;
   height: auto;
+  width: 350px;  /* Increased size */
 }
 
-.form-section {
-  width: 50%;
-  max-width: 400px;
-  background: white;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+/* Form Container */
+.form-container {
+  display: flex;
+  justify-content: center;
+  flex: 1;
 }
 
-.form-title {
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: #1B4332; /* Darker shade */
-  margin-bottom: 20px;
-  text-align: center;
+/* Auth Card */
+.auth-card {
+  width: 100%;
+  max-width: 450px;
+  padding: 25px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  background: #f5f5f5; /* Light background for soft look */
 }
 
 /* Input Fields */
 .input-field {
-  width: 90%;
-  padding: 10px;
-  margin-bottom: 15px;
-  border: 1px solid #74C69D; /* Matches the logo's accent color */
-  border-radius: 4px;
-  font-size: 1rem;
-  transition: all 0.3s ease-in-out;
+  margin-bottom: 12px;
 }
 
-.input-field:focus {
-  border-color: #52B788;
-  outline: none;
-}
-
-/* Submit Button */
+/* Buttons */
 .submit-button {
-  width: 90%;
-  padding: 10px;
-  background-color: #2D6A4F; /* Matches the header color */
+  background-color: #2D6A4F; /* Dark green */
   color: white;
-  font-size: 1rem;
-  font-weight: bold;
   border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.3s, transform 0.2s ease-in-out;
-}
-
-.submit-button:hover {
-  background-color: #1B4332;
-  transform: translateY(-2px); /* Small hover effect */
-}
-
-.submit-button:active {
-  transform: translateY(2px); /* Active state when clicked */
-}
-
-/* Signup Text */
-.signup-text {
-  margin-top: 15px;
-  text-align: center;
-  color: #1B4332;
-}
-
-.signup-link {
-  color: #40916C; /* Green accent */
-  text-decoration: none;
-}
-
-.signup-link:hover {
-  text-decoration: underline;
-}
-
-/* Transition between login/signup forms */
-.login-form, .signup-form {
-  display: flex;
-  flex-direction: column;
-}
-
-.form-section {
-  transition: opacity 0.3s ease-in-out;
-}
-
-.form-section.fade-enter {
-  opacity: 0;
-}
-
-.form-section.fade-enter-active {
-  opacity: 1;
-}
-
-/* Google and Guest Login Buttons */
-.google-login, .guest-login {
-  width: 90%;
   padding: 12px;
-  margin-top: 10px;
-  background-color: #4285F4;
-  color: white;
-  border-radius: 8px;
+  margin-bottom: 12px;
   font-size: 1rem;
+  cursor: pointer;
+}
+
+.google-button {
+  background-color: #db4437;
+  color: white;
+  border: none;
+  padding: 12px;
+  margin-bottom: 12px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+/* Button Hover Effects */
+.submit-button:hover, .google-button:hover {
+  opacity: 0.9;
+}
+
+/* Text Links */
+.text-link {
+  color: #2D6A4F;
+  font-size: 1rem;
+  margin: auto;
+}
+Text{
   display: flex;
   justify-content: center;
   align-items: center;
-  cursor: pointer;
-  transition: background-color 0.3s ease-in-out;
+ 
+}
+.btn{
+  margin: 0;
+  padding: 0;
 }
 
-.google-login:hover, .guest-login:hover {
-  background-color: #357AE8;
-}
-
-.google-login i, .guest-login i {
-  margin-right: 10px;
-}
-
-/* Forgot Password Link */
-.forgot-password-link {
-  color: #40916C;
-  text-align: center;
-  font-size: 14px;
-  margin-top: 10px;
-}
-
-.forgot-password-link:hover {
+.text-link:hover {
   text-decoration: underline;
-}
-
-/* Media Queries */
-@media (max-width: 768px) {
-  .main-section {
-    padding: 15px;
-  }
-
-  .input-field {
-    padding: 10px;
-  }
-
-  .submit-button {
-    padding: 10px 20px;
-  }
-
-  .logo {
-    max-width: 120px;
-  }
-
-  .form-title {
-    font-size: 20px;
-  }
-}
-
-@media (max-width: 480px) {
-  .landing-page {
-    padding: 10px;
-  }
-
-  .form-section {
-    width: 100%;
-  }
 }

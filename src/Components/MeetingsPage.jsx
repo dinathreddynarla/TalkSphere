@@ -1,55 +1,64 @@
-import React, { useEffect, useState , useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from "react-redux";
-import { fetchMeetings, addMeeting, editMeeting, deleteMeeting,} from "../Redux/meetingsSlice.js";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
-import "../Styles/MeetingsPage.css";
+import { fetchMeetings, addMeeting, editMeeting, deleteMeeting } from "../Redux/meetingsSlice.js";
+import { Modal, Button, Input, DatePicker, Typography, Form, Skeleton, Space } from 'antd';
+import { EditOutlined, DeleteOutlined, PlayCircleOutlined, ScheduleOutlined } from '@ant-design/icons';
 import Cookies from "js-cookie";
+import dayjs from "dayjs";  // Import dayjs for date handling
+import "../Styles/MeetingsPage.css";
 
+const { Title } = Typography;
 
 const MeetingsPage = () => {
   const dispatch = useDispatch();
   const meetings = useSelector((state) => state.meetings.meetings);
   const [showModal, setShowModal] = useState(false);
+  const [editingMeeting, setEditingMeeting] = useState(null);
   const [formData, setFormData] = useState({
     title: "",
     description: "",
-    date: new Date(),
+    date: dayjs(),  // Set default value as dayjs instance
     duration: ""
   });
-  const [editingMeeting, setEditingMeeting] = useState(null);
-    const navigate = useNavigate()
-   const cookie = Cookies.get("session")
-      const session = cookie ? JSON.parse(cookie) : null ;
-      if (!session) {
-          navigate("/");
-          return;
-      }
-    
-      useEffect(() => {
-        const isReload = sessionStorage.getItem("isReload");
-        if (isReload) {
-          navigate("/dashboard");
-          sessionStorage.removeItem("isReload");
-        }
-      }, [navigate]);
-      
-      // Set reload flag on page reload
-      window.addEventListener("beforeunload", () => {
-        sessionStorage.setItem("isReload", "true");
-      });
+  const [loading, setLoading] = useState(true); // For skeleton loading
+  const [form] = Form.useForm();  // Ant Design form hook to handle form state
+  const navigate = useNavigate();
+  const cookie = Cookies.get("session");
+  const session = cookie ? JSON.parse(cookie) : null;
 
-  const handleFormSubmit = async (e) => {
-    e.preventDefault();
-    if (editingMeeting) {
-      dispatch(editMeeting({ id: editingMeeting._id, formData }));
-    } else {
-      dispatch(addMeeting(formData));
+  if (!session) {
+    navigate("/");  // Redirect to login page if no session exists
+    return;
+  }
+
+  useEffect(() => {
+    const isReload = sessionStorage.getItem("isReload");
+    if (isReload) {
+      navigate("/dashboard");
+      sessionStorage.removeItem("isReload");
     }
+  }, [navigate]);
+
+  useEffect(() => {
+    // Simulate data fetching delay
+    
+    setTimeout(() => {
+      setLoading(false);  // Stop skeleton loading once data is fetched
+    }, 1000);
+  }, []);
+
+  const handleFormSubmit = async (values) => {
+    // If editing, dispatch the update action, else create a new meeting
+    if (editingMeeting) {
+      dispatch(editMeeting({ id: editingMeeting._id, formData: values }));
+    } else {
+      dispatch(addMeeting(values));
+    }
+
     setShowModal(false);
     setEditingMeeting(null);
-    setFormData({ title: "", description: "", date: new Date(), duration: "" });
+    setFormData({ title: "", description: "", date: dayjs(), duration: "" });
   };
 
   const handleDelete = (id) => {
@@ -61,91 +70,113 @@ const MeetingsPage = () => {
     setFormData({
       title: meeting.title,
       description: meeting.description,
-      date: new Date(meeting.date),
+      date: dayjs(meeting.date),  // Convert to dayjs instance
       duration: meeting.duration,
     });
     setShowModal(true);
   };
 
-  const handleJoin = useCallback((roomID)=>{
-    navigate(`/room/${roomID}`)
-  },[navigate])
+  const handleJoin = (roomID) => {
+    navigate(`/room/${roomID}`);
+  };
 
   return (
     <div className="meetings-container">
-      <h1 className="meetings-title">Meetings</h1>
-
-      <button className="schedule-btn" onClick={() => setShowModal(true)}>
+      <Title level={1} className="meetings-title">Meetings</Title>
+      
+      <Button
+        type="primary"
+        icon={<ScheduleOutlined />}
+        onClick={() => setShowModal(true)}
+        style={{ marginBottom: '20px' }}
+      >
         Schedule a Meeting
-      </button>
+      </Button>
 
-      {/* Render Modal */}
-      {showModal && (
-        <div className="modal-overlay">
-          <div className="modal-content">
-            <h2 className="modal-title">{editingMeeting ? "Edit Meeting" : "Schedule Meeting"}</h2>
-            <form onSubmit={handleFormSubmit}>
-              <input
-                type="text"
-                className="input-field"
-                placeholder="Title"
-                value={formData.title}
-                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                required
-              />
-              <textarea
-                className="textarea-field"
-                placeholder="Description"
-                value={formData.description}
-                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-              />
-              <DatePicker
-                selected={formData.date}
-                onChange={(date) => setFormData({ ...formData, date })}
-                className="input-field"
-                showTimeSelect
-                dateFormat="Pp"
-              />
-              <input
-                type="number"
-                className="input-field"
-                placeholder="Duration (minutes)"
-                value={formData.duration}
-                onChange={(e) => setFormData({ ...formData, duration: e.target.value })}
-                required
-              />
-              <div className="modal-buttons">
-                <button type="button" className="cancel-btn" onClick={() => setShowModal(false)}>
-                  Cancel
-                </button>
-                <button type="submit" className="submit-btn">
-                  {editingMeeting ? "Update" : "Schedule"}
-                </button>
-              </div>
-            </form>
+      {/* Modal for scheduling/editing meetings */}
+      <Modal
+        title={editingMeeting ? "Edit Meeting" : "Schedule Meeting"}
+        open={showModal}
+        onCancel={() => setShowModal(false)}
+        footer={null}
+        width={600}
+      >
+        <Form
+          form={form}
+          initialValues={formData}
+          onFinish={handleFormSubmit}  // Use onFinish instead of onSubmit
+        >
+          <Form.Item label="Title" name="title" rules={[{ required: true, message: 'Please enter the title!' }]}>
+            <Input />
+          </Form.Item>
+
+          <Form.Item label="Description" name="description">
+            <Input.TextArea />
+          </Form.Item>
+
+          <Form.Item label="Date & Time" name="date" rules={[{ required: true, message: 'Please select a date and time!' }]}>
+            <DatePicker
+              showTime
+              format="YYYY-MM-DD HH:mm"
+              style={{ width: '100%' }}
+              value={formData.date}  // Ensure it's a dayjs instance
+              onChange={(date) => setFormData({ ...formData, date })}  // Update date using dayjs
+            />
+          </Form.Item>
+
+          <Form.Item label="Duration (minutes)" name="duration" rules={[{ required: true, message: 'Please enter the duration!' }]}>
+            <Input type="number" />
+          </Form.Item>
+
+          <div className="modal-buttons" style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <Button onClick={() => setShowModal(false)} style={{ width: '48%' }}>
+              Cancel
+            </Button>
+            <Button
+              type="primary"
+              htmlType="submit"
+              style={{ width: '48%' }}
+            >
+              {editingMeeting ? "Update" : "Schedule"}
+            </Button>
           </div>
-        </div>
-      )}
+        </Form>
+      </Modal>
 
-      {/* Render Meetings */}
+      {/* Render Meetings List */}
       <div className="meetings-list">
-        {meetings.length === 0 ? (
+        {loading ? (
+          <Skeleton active paragraph={{ rows: 1 }} />
+        ) : meetings.length === 0 ? (
           <p>No meetings scheduled.</p>
         ) : (
           meetings.map((meeting) => (
             <div key={meeting._id} className="meeting-card">
-              <h3 className="meeting-title">{meeting.title}</h3>
+              <Title level={3} className="meeting-title">{meeting.title}</Title>
               <p>{meeting.description}</p>
-              <p>
-                <strong>Date:</strong> {new Date(meeting.date).toLocaleString()}
-              </p>
-              <p>
-                <strong>Duration:</strong> {meeting.duration} minutes
-              </p>
-              <div className="meeting-actions">
-              <button className="start-btn" onClick={() => handleJoin(meeting._id)}>Start</button>
-                <button className="edit-btn" onClick={() => handleEdit(meeting)}>Edit</button>
-                <button className="delete-btn" onClick={() => handleDelete(meeting._id)}> Delete</button>
+              <p><strong>Date:</strong> {dayjs(meeting.date).format("YYYY-MM-DD HH:mm")}</p>
+              <p><strong>Duration:</strong> {meeting.duration} minutes</p>
+              <div className="meeting-actions" style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <Button
+                  type="primary"
+                  icon={<PlayCircleOutlined />}
+                  onClick={() => handleJoin(meeting._id)}
+                >
+                  Start
+                </Button>
+                <Button
+                  icon={<EditOutlined />}
+                  onClick={() => handleEdit(meeting)}
+                >
+                  Edit
+                </Button>
+                <Button
+                  type="danger"
+                  icon={<DeleteOutlined />}
+                  onClick={() => handleDelete(meeting._id)}
+                >
+                  Delete
+                </Button>
               </div>
             </div>
           ))

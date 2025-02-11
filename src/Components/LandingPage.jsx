@@ -1,195 +1,200 @@
-import React, { useState,useEffect } from "react";
-import { useNavigate } from "react-router-dom"; 
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { Input, Button, Typography, Row, Col, Card, message, Spin } from "antd";
+import { GoogleOutlined, UserOutlined, LockOutlined, MailOutlined } from "@ant-design/icons";
 import { loginWithEmailPassword, signupWithEmailPassword, loginWithGoogle, guestLogin, passwordReset } from "../services/authService";
-import "../Styles/LandingPage.css"; 
-import Logo from "../assets/logo.png"; 
+import "../Styles/LandingPage.css";
+import Logo from "../assets/logo.png";
 import Cookies from "js-cookie";
+
+const { Title, Text } = Typography;
 
 const LandingPage = () => {
     const [isLoginForm, setIsLoginForm] = useState(true);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [name, setName] = useState("");
-    const [roomID , setRoomID] = useState(null)
+    const [roomID, setRoomID] = useState(null);
     const [confirmPassword, setConfirmPassword] = useState("");
-    const navigate = useNavigate(); 
+    const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
 
-    const changeIsLogin = () => {
-        setIsLoginForm((prev) => !prev);
-    };
-    
-    //To check user session
     useEffect(() => {
-         const cookie = Cookies.get("session")
-        const session = cookie ? JSON.parse(cookie) : null ;
-        console.log(session);
-        
-        const roomSession = localStorage.getItem("roomID")
+        const cookie = Cookies.get("session");
+        const session = cookie ? JSON.parse(cookie) : null;
+        const roomSession = localStorage.getItem("roomID");
 
-        if(roomSession){
-            setRoomID(roomSession)
-        }
-        if (session) {      
-            navigate("/dashboard");
-        }
-      }, [navigate]);
+        if (roomSession) setRoomID(roomSession);
+        if (session) navigate("/dashboard");
+    }, [navigate]);
 
-    //handle login
+    const changeIsLogin = () => setIsLoginForm((prev) => !prev);
+
+    const handleNavigation = (path) => {
+        setLoading(true);
+        setTimeout(() => {
+            navigate(path);
+            setLoading(false);
+        }, 2000);
+    };
+
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
             await loginWithEmailPassword(email, password);
-            console.log("Login successful!");
-            if(roomID){
-                navigate(`/room/${roomID}`) // Redirect to Room , if user comes from RoomId
-            }else {
-                navigate("/dashboard"); // Redirect to dashboard after successful login
-            }
-            
-        } catch (error) {
-            alert("Login failed! Please check your credentials.");
+            message.success("Login successful! Redirecting...");
+            handleNavigation(roomID ? `/room/${roomID}` : "/dashboard");
+        } catch {
+            message.error("Login failed! Please check your credentials.");
         }
     };
 
-    //handle signup
     const handleSignup = async (e) => {
         e.preventDefault();
         if (password !== confirmPassword) {
-            alert("Passwords do not match!");
+            message.warning("Passwords do not match!");
             return;
         }
         try {
-            console.log(name,email);
-            
-            await signupWithEmailPassword(name,email, password);
-            console.log("Signup successful!");
-            setIsLoginForm(true); // Switch to login form after successful signup
-        } catch (error) {
-            alert("Signup failed! Please check your details.");
+            await signupWithEmailPassword(name, email, password);
+            message.success("Signup successful! Please log in.");
+            setIsLoginForm(true);
+        } catch {
+            message.error("Signup failed! Please check your details.");
         }
     };
 
-    //handle google login
     const handleGoogleLogin = async () => {
         try {
             await loginWithGoogle();
-            console.log("Google login successful!");
-            if(roomID){
-                navigate(`/room/${roomID}`)
-            }else {
-                navigate("/dashboard"); // Redirect to dashboard after successful login
-            }
-            
-        } catch (error) {
-            alert("Google login failed!");
+            message.success("Google login successful! Redirecting...");
+            handleNavigation(roomID ? `/room/${roomID}` : "/dashboard");
+        } catch {
+            message.error("Google login failed!");
         }
     };
 
-    //handle guest login
     const handleGuestLogin = async () => {
         try {
             await guestLogin();
-            console.log("Guest login successful!");
-            if(roomID){
-                navigate(`/room/${roomID}`)
-            }else {
-                navigate("/dashboard"); // Redirect to dashboard after successful login
-            }
-        } catch (error) {
-            alert("Guest login failed!");
+            message.success("Logged in as Guest! Redirecting...");
+            handleNavigation(roomID ? `/room/${roomID}` : "/dashboard");
+        } catch {
+            message.error("Guest login failed!");
         }
     };
 
-    const handleForgotPassword = async (e)=>{
+    const handleForgotPassword = async (e) => {
         e.preventDefault();
-        try{
-            await passwordReset(email)
-            alert(`Password reset email sent to ${email}`)    
+        try {
+            await passwordReset(email);
+            message.success(`Password reset email sent to ${email}`);
+        } catch (err) {
+            message.error(err.message || "Failed to send password reset email.");
         }
-        catch (err){
-            alert(err.message)
-            
-        }
-    }
+    };
 
     return (
-        <div className="landing-page">
-            <header className="header">
-                <h1 className="brand-name">TalkSphere</h1>
-            </header>
+        <div className="landing-container">
+            <Title level={1} className="title">TalkSphere</Title>
 
-            <main className="main-section">
-                <div className="logo-section">
+            <Row className="content-container" justify="center" align="middle">
+                <Col xs={24} sm={12} md={10} className="logo-container">
                     <img src={Logo} alt="Logo" className="logo" />
-                </div>
+                </Col>
 
-                <div className="form-section">
-                    {isLoginForm ? (
-                        <div className="login-form">
-                            <h2 className="form-title">Login</h2>
-                            <input
-                                type="email"
-                                placeholder="Email Address"
-                                className="input-field"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                            />
-                            <input
-                                type="password"
-                                placeholder="Password"
-                                className="input-field"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                            />
-                            <button onClick={handleLogin} className="submit-button">Submit</button>
-                            <button onClick={handleGoogleLogin} className="submit-button">Login with Google</button>
-                            <button onClick={handleForgotPassword} className="submit-button">Forgot Password</button>
-                            <button onClick={handleGuestLogin} className="submit-button">Guest Login</button>
-                            <p className="signup-text">
-                                Don't have an account? <button onClick={changeIsLogin}>Sign Up</button>
-                            </p>
-                        </div>
-                    ) : (
-                        <div className="signup-form">
-                            <h2 className="form-title">Sign Up</h2>
-                            <input
-                                type="text"
-                                placeholder="Full Name"
-                                className="input-field"
-                                value={name}
-                                onChange={(e) => setName(e.target.value)}
-                            />
-                            <input
-                                type="email"
-                                placeholder="Email Address"
-                                className="input-field"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                            />
-                            <input
-                                type="password"
-                                placeholder="Password"
-                                className="input-field"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                            />
-                            <input
-                                type="password"
-                                placeholder="Confirm Password"
-                                className="input-field"
-                                value={confirmPassword}
-                                onChange={(e) => setConfirmPassword(e.target.value)}
-                            />
-                            <button onClick={handleSignup} className="submit-button">Submit</button>
-
-
-                            <p className="signup-text">
-                                Already have an account? <button onClick={changeIsLogin}>Login</button>
-                            </p>
-                        </div>
-                    )}
-                </div>
-            </main>
+                <Col xs={24} sm={12} md={10} className="form-container">
+                    <Card className="auth-card">
+                        {loading ? (
+                            <div style={{ textAlign: "center", padding: "20px" }}>
+                                <Spin size="large" />
+                                <Text type="secondary">Redirecting, please wait...</Text>
+                            </div>
+                        ) : isLoginForm ? (
+                            <>
+                                <Title level={3}>Login</Title>
+                                <Input
+                                    prefix={<MailOutlined />}
+                                    placeholder="Email Address"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    className="input-field"
+                                />
+                                <Input.Password
+                                    prefix={<LockOutlined />}
+                                    placeholder="Password"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    className="input-field"
+                                />
+                                <Button type="primary" block onClick={handleLogin} className="submit-button">
+                                    Login
+                                </Button>
+                                <Button icon={<GoogleOutlined />} block onClick={handleGoogleLogin} className="google-button">
+                                    Continue with Google
+                                </Button>
+                                <Button type="link" block onClick={handleForgotPassword}>
+                                    Forgot Password?
+                                </Button>
+                                <Button type="dashed" block onClick={handleGuestLogin}>
+                                    Continue as Guest
+                                </Button>
+                                <div style={{ display: "flex", justifyContent: "center" }}>
+                                    <Text>
+                                        Don't have an account?
+                                        <Button type="link" onClick={changeIsLogin}>
+                                            Sign Up
+                                        </Button>
+                                    </Text>
+                                </div>
+                            </>
+                        ) : (
+                            <>
+                                <Title level={3}>Sign Up</Title>
+                                <Input
+                                    prefix={<UserOutlined />}
+                                    placeholder="Full Name"
+                                    value={name}
+                                    onChange={(e) => setName(e.target.value)}
+                                    className="input-field"
+                                />
+                                <Input
+                                    prefix={<MailOutlined />}
+                                    placeholder="Email Address"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    className="input-field"
+                                />
+                                <Input.Password
+                                    prefix={<LockOutlined />}
+                                    placeholder="Password"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    className="input-field"
+                                />
+                                <Input.Password
+                                    prefix={<LockOutlined />}
+                                    placeholder="Confirm Password"
+                                    value={confirmPassword}
+                                    onChange={(e) => setConfirmPassword(e.target.value)}
+                                    className="input-field"
+                                />
+                                <Button type="primary" block onClick={handleSignup} className="submit-button">
+                                    Sign Up
+                                </Button>
+                                <div style={{ display: "flex", justifyContent: "center" }}>
+                                    <Text>
+                                        Already have an account?{" "}
+                                        <Button type="link" onClick={changeIsLogin} className="btn">
+                                            Login
+                                        </Button>
+                                    </Text>
+                                </div>
+                            </>
+                        )}
+                    </Card>
+                </Col>
+            </Row>
         </div>
     );
 };

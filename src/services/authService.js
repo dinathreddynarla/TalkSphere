@@ -1,7 +1,7 @@
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, signInAnonymously ,signOut , onAuthStateChanged, setPersistence, browserLocalPersistence ,sendPasswordResetEmail} from "firebase/auth";
 import { auth } from "./firebaseConfig";
 import Cookies from "js-cookie";
-import { createUser } from "./userService";
+import { createUser,getUser } from "./userService";
 
 
 
@@ -50,7 +50,7 @@ export const loginWithGoogle = async () => {
 
         const token = await user.getIdToken()
         // Check if user exists in the database
-        // const userInfo = await getUser(token, user.uid);
+        const userInfo = await getUser(token, user.uid);
 
         if (userInfo.error && userInfo.status === 404) {
             console.log("User not found, creating new user...");

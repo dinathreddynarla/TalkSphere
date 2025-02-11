@@ -1,79 +1,41 @@
-
-.brand-name {
-    margin: 0;
-    font-size: 24px;
-}
-
-.navbar {
-    margin-right: 20px;
-}
-
-.nav-list {
-    list-style: none;
-    display: flex;
-    margin: 0;
-    padding: 0;
-}
-
-.nav-item {
-    margin-left: 20px;
-}
-
-.nav-item a {
-    color: white;
-    text-decoration: none;
-    font-size: 18px;
-}
-
-.nav-item a:hover {
-    text-decoration: underline;
-}
-
-Main Content Box Styling
- .main-content {
+/* HomePage.css */
+.home-page {
     padding: 20px;
-}
-
-.box {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: white;
-    border-radius: 8px;
-    padding: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.left-side {
+    background-color: #f5f5f5;
+  }
+  
+  .home-content {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .buttons {
     display: flex;
     flex-direction: column;
+    align-items: center;
     gap: 15px;
-}
-
-.action-button {
-    padding: 10px 20px;
-    background-color: #0073e6;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s ease;
-}
-
-.action-button:hover {
-    background-color: #005bb5;
-}
-
-.right-side {
+  }
+  
+  .right-side {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 60%;
-}
-
-/* video {
-    border-radius: 8px;
+    margin-top: 20px;
+  }
+  
+  .meeting-id-input {
     width: 100%;
-    max-width: 500px;
-} */
+    padding: 8px;
+    border-radius: 4px;
+  }
+  
+  @media (max-width: 768px) {
+    .home-content {
+      padding: 10px;
+    }
+  
+    .right-side {
+      margin-top: 15px;
+    }
+  }
+  

@@ -1,29 +1,28 @@
-.brand-name {
-    margin: 0;
-    font-size: 24px;
-}
-
-.navbar {
-    margin-right: 20px;
-}
-
-.nav-list {
-    list-style: none;
-    display: flex;
-    margin: 0;
-    padding: 0;
-}
-
-.nav-item {
-    margin-left: 20px;
-}
-
-.nav-item a {
-    color: white;
-    text-decoration: none;
-    font-size: 18px;
-}
-
-.nav-item a:hover {
-    text-decoration: underline;
-}
+/* Dashboard.css */
+@media only screen and (max-width: 768px) {
+    .ant-layout-header {
+      padding: 0 10px;
+    }
+  
+    .ant-layout-sider {
+      width: 0 !important;
+      padding: 0;
+    }
+  
+    .ant-layout-content {
+      padding: 10px;
+    }
+  
+    .ant-menu {
+      padding: 0;
+    }
+  
+    .ant-btn-link {
+      font-size: 14px;
+    }
+  
+    .ant-typography {
+      font-size: 18px;
+    }
+  }
+  
