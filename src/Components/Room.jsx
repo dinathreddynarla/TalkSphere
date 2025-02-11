@@ -6,37 +6,28 @@ import { getUser } from "../services/userService";
 import axios from "axios";
 import { useState, useEffect } from 'react';
 import Cookies from "js-cookie";
+import { useDispatch,useSelector } from 'react-redux';
 
 const Room = () => {
   const { roomID } = useParams();
   const navigate = useNavigate();
-  const [user, setUser] = useState(null);
   const [token, setToken] = useState("");
   const [meeting, setMeeting] = useState(null);
   let zpInstance = null;
-
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.user.user);
   // Fetch user profile
   useEffect(() => {
-    const fetchUserProfile = async () => {
-      try {
          const cookie = Cookies.get("session")
          const session = cookie ? JSON.parse(cookie) : null ;
-        // const session = JSON.parse(localStorage.getItem("session"));
+     
         if (!session || !session.token) {
           localStorage.setItem("roomID" ,roomID)      
           navigate("/");
           return;
         }
         localStorage.removeItem("roomID")
-        setToken(session.token);
-        const response = await getUser(session.token);
-        setUser(response);
-        console.log(response);
-      } catch (error) { 
-        console.error("Error fetching profile:", error);
-      }
-    };
-    fetchUserProfile();
+        setToken(session.token)
   }, [navigate]);
 
   // Fetch meeting details

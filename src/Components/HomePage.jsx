@@ -1,5 +1,5 @@
 import React from 'react'
-import { useState ,useCallback} from 'react';
+import { useState ,useCallback ,useEffect} from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../Styles/HomePage.css';
 import Cookies from "js-cookie";
@@ -19,6 +19,20 @@ const HomePage = () => {
         navigate(`/room/${roomID}`)
     },[navigate,roomID])
 
+    useEffect(() => {
+        const isReload = sessionStorage.getItem("isReload");
+        if (isReload) {
+          navigate("/dashboard");
+          sessionStorage.removeItem("isReload");
+        }
+      }, [navigate]);
+      
+      // Set reload flag on page reload
+      window.addEventListener("beforeunload", () => {
+        sessionStorage.setItem("isReload", "true");
+      });
+      
+      
     return (
         <div className="home-page">
                 <div className="home-content">

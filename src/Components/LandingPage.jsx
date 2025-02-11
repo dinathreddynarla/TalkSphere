@@ -1,6 +1,6 @@
 import React, { useState,useEffect } from "react";
 import { useNavigate } from "react-router-dom"; // Import useNavigate hook
-import { loginWithEmailPassword, signupWithEmailPassword, loginWithGoogle, guestLogin } from "../services/authService";
+import { loginWithEmailPassword, signupWithEmailPassword, loginWithGoogle, guestLogin, passwordReset } from "../services/authService";
 import "../Styles/LandingPage.css"; // Import the CSS file
 import Logo from "../assets/logo.png"; // Update with the correct path to your logo file
 import Cookies from "js-cookie";
@@ -55,6 +55,8 @@ const LandingPage = () => {
             return;
         }
         try {
+            console.log(name,email);
+            
             await signupWithEmailPassword(name,email, password);
             console.log("Signup successful!");
             setIsLoginForm(true); // Switch to login form after successful signup
@@ -92,6 +94,18 @@ const LandingPage = () => {
         }
     };
 
+    const handleForgotPassword = async (e)=>{
+        e.preventDefault();
+        try{
+            await passwordReset(email)
+            alert(`Password reset email sent to ${email}`)    
+        }
+        catch (err){
+            alert(err.message)
+            
+        }
+    }
+
     return (
         <div className="landing-page">
             <header className="header">
@@ -123,6 +137,7 @@ const LandingPage = () => {
                             />
                             <button onClick={handleLogin} className="submit-button">Submit</button>
                             <button onClick={handleGoogleLogin} className="submit-button">Login with Google</button>
+                            <button onClick={handleForgotPassword} className="submit-button">Forgot Password</button>
                             <button onClick={handleGuestLogin} className="submit-button">Guest Login</button>
                             <p className="signup-text">
                                 Don't have an account? <button onClick={changeIsLogin}>Sign Up</button>
@@ -160,6 +175,8 @@ const LandingPage = () => {
                                 onChange={(e) => setConfirmPassword(e.target.value)}
                             />
                             <button onClick={handleSignup} className="submit-button">Submit</button>
+
+
                             <p className="signup-text">
                                 Already have an account? <button onClick={changeIsLogin}>Login</button>
                             </p>

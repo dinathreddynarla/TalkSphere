@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export const createUser = async(token,uid,email,name ="Guest") =>{
+export const createUser = async(token,uid,email,name) =>{
     let data= {
         uid:uid,
         email:email,
@@ -18,6 +18,24 @@ export const createUser = async(token,uid,email,name ="Guest") =>{
         console.log(error);
         
     }
+}
+
+export const updateUser = async(token,userData) =>{
+  try{
+
+    console.log(userData);
+    
+     let response = await axios.put("https://talksphere-nyay.onrender.com/users",userData, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+        console.log(response.data.user);
+      return response.data.user
+  }catch (error) {
+      console.log(error);
+      
+  }
 }
 
 export const getUser = async(token) =>{

@@ -1,110 +1,76 @@
-import React, { useState, useEffect,useCallback } from "react";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import React, { useEffect, useState , useCallback } from "react";
+import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from "react-redux";
+import { fetchMeetings, addMeeting, editMeeting, deleteMeeting,} from "../Redux/meetingsSlice.js";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "../Styles/MeetingsPage.css";
 import Cookies from "js-cookie";
 
+
 const MeetingsPage = () => {
-  const [meetings, setMeetings] = useState([]);
+  const dispatch = useDispatch();
+  const meetings = useSelector((state) => state.meetings.meetings);
   const [showModal, setShowModal] = useState(false);
-  const [token , setToken] = useState(null)
   const [formData, setFormData] = useState({
     title: "",
     description: "",
     date: new Date(),
     duration: ""
   });
-  
-  
   const [editingMeeting, setEditingMeeting] = useState(null);
-  const navigate = useNavigate()
-  const handleJoin = useCallback((roomID)=>{
-          navigate(`/room/${roomID}`)
-      },[navigate])
-  
+    const navigate = useNavigate()
+   const cookie = Cookies.get("session")
+      const session = cookie ? JSON.parse(cookie) : null ;
+      if (!session) {
+          navigate("/");
+          return;
+      }
     
- 
-  
-  // let token = JSON.parse(localStorage.getItem("session")).token;
-
-  const fetchMeetings = async () => {
-    try {
-      if(!token) return;
-      const response = await axios.get("https://talksphere-nyay.onrender.com/meetings", {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      setMeetings(response.data);
-    } catch (error) {
-      console.error("Error fetching meetings:", error);
-    }
-  };
-
-  const cookie = Cookies.get("session")
-  const session = cookie ? JSON.parse(cookie) : null ;
-  useEffect(() => {
-      if (session) {
-        setToken(session.token);
-        
-      } else {
-        navigate("/");
-      }
-    }, [session, navigate]);
-  useEffect(()=>{
-    console.log(token); 
-    fetchMeetings();
-  },[token])
-  const handleFormSubmit = async e => {
-    e.preventDefault();
-
-    try {
-      if (editingMeeting) {
-        await axios.put(
-          `https://talksphere-nyay.onrender.com/meetings/${editingMeeting._id}`,
-          formData,
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
-      } else {
-        await axios.post("https://talksphere-nyay.onrender.com/meetings", formData, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-      }
-
-      setShowModal(false);
-      setEditingMeeting(null);
-      setFormData({ title: "", description: "", date: new Date(), duration: "" });
-      fetchMeetings();
-    } catch (error) {
-      console.error("Error submitting form:", error);
-    }
-  };
-
-  const handleDelete = async (id) => {
-    try {
-      console.log("hello");
+      useEffect(() => {
+        const isReload = sessionStorage.getItem("isReload");
+        if (isReload) {
+          navigate("/dashboard");
+          sessionStorage.removeItem("isReload");
+        }
+      }, [navigate]);
       
-      await axios.delete(`https://talksphere-nyay.onrender.com/meetings/${id}`, {
-        headers: { Authorization: `Bearer ${token}` }
+      // Set reload flag on page reload
+      window.addEventListener("beforeunload", () => {
+        sessionStorage.setItem("isReload", "true");
       });
-      fetchMeetings();
-    } catch (error) {
-      console.error("Error deleting meeting:", error);
+
+  const handleFormSubmit = async (e) => {
+    e.preventDefault();
+    if (editingMeeting) {
+      dispatch(editMeeting({ id: editingMeeting._id, formData }));
+    } else {
+      dispatch(addMeeting(formData));
     }
+    setShowModal(false);
+    setEditingMeeting(null);
+    setFormData({ title: "", description: "", date: new Date(), duration: "" });
   };
 
-  const handleEdit = meeting => {
+  const handleDelete = (id) => {
+    dispatch(deleteMeeting(id));
+  };
+
+  const handleEdit = (meeting) => {
     setEditingMeeting(meeting);
     setFormData({
       title: meeting.title,
       description: meeting.description,
       date: new Date(meeting.date),
-      duration: meeting.duration
+      duration: meeting.duration,
     });
     setShowModal(true);
   };
-  console.log(token);
-  
+
+  const handleJoin = useCallback((roomID)=>{
+    navigate(`/room/${roomID}`)
+  },[navigate])
+
   return (
     <div className="meetings-container">
       <h1 className="meetings-title">Meetings</h1>
@@ -113,6 +79,7 @@ const MeetingsPage = () => {
         Schedule a Meeting
       </button>
 
+      {/* Render Modal */}
       {showModal && (
         <div className="modal-overlay">
           <div className="modal-content">
@@ -123,18 +90,18 @@ const MeetingsPage = () => {
                 className="input-field"
                 placeholder="Title"
                 value={formData.title}
-                onChange={e => setFormData({ ...formData, title: e.target.value })}
+                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                 required
               />
               <textarea
                 className="textarea-field"
                 placeholder="Description"
                 value={formData.description}
-                onChange={e => setFormData({ ...formData, description: e.target.value })}
+                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
               />
               <DatePicker
                 selected={formData.date}
-                onChange={date => setFormData({ ...formData, date })}
+                onChange={(date) => setFormData({ ...formData, date })}
                 className="input-field"
                 showTimeSelect
                 dateFormat="Pp"
@@ -144,7 +111,7 @@ const MeetingsPage = () => {
                 className="input-field"
                 placeholder="Duration (minutes)"
                 value={formData.duration}
-                onChange={e => setFormData({ ...formData, duration: e.target.value })}
+                onChange={(e) => setFormData({ ...formData, duration: e.target.value })}
                 required
               />
               <div className="modal-buttons">
@@ -160,21 +127,25 @@ const MeetingsPage = () => {
         </div>
       )}
 
+      {/* Render Meetings */}
       <div className="meetings-list">
         {meetings.length === 0 ? (
           <p>No meetings scheduled.</p>
         ) : (
-          meetings.map(meeting => (
+          meetings.map((meeting) => (
             <div key={meeting._id} className="meeting-card">
               <h3 className="meeting-title">{meeting.title}</h3>
               <p>{meeting.description}</p>
-              <p>{meeting._id}</p>
-              <p><strong>Date:</strong> {new Date(meeting.date).toLocaleString()}</p>
-              <p><strong>Duration:</strong> {meeting.duration} minutes</p>
+              <p>
+                <strong>Date:</strong> {new Date(meeting.date).toLocaleString()}
+              </p>
+              <p>
+                <strong>Duration:</strong> {meeting.duration} minutes
+              </p>
               <div className="meeting-actions">
               <button className="start-btn" onClick={() => handleJoin(meeting._id)}>Start</button>
                 <button className="edit-btn" onClick={() => handleEdit(meeting)}>Edit</button>
-                <button className="delete-btn" onClick={() => handleDelete(meeting._id)}>Delete</button>
+                <button className="delete-btn" onClick={() => handleDelete(meeting._id)}> Delete</button>
               </div>
             </div>
           ))

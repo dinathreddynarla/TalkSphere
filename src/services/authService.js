@@ -1,7 +1,12 @@
-import { signInWithEmailAndPassword, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, signInAnonymously ,signOut } from "firebase/auth";
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, signInAnonymously ,signOut , onAuthStateChanged, setPersistence, browserLocalPersistence ,sendPasswordResetEmail} from "firebase/auth";
 import { auth } from "./firebaseConfig";
 import Cookies from "js-cookie";
 import { createUser, getUser } from "./userService";
+
+
+
+
+
 // Login with email/password
 export const loginWithEmailPassword = async (email, password) => {
     try {
@@ -87,3 +92,40 @@ export const logout = async () => {
         throw error;
     }
 };
+
+//Password Reset 
+
+export const passwordReset = async (email) =>{
+    try {
+        await sendPasswordResetEmail(auth, email);
+        console.log(`Password reset email sent to ${email}`);
+      } catch (error) {
+        console.error("Error sending password reset email:", error.message);
+        throw error;
+      }
+}
+
+export const getFreshToken = async()=>{
+      try {
+        await setPersistence(auth, browserLocalPersistence);
+        console.log("Persistence mode set.");
+
+        // Monitor authentication state changes
+        const user = await new Promise((resolve) => {
+        onAuthStateChanged(auth, (user) => resolve(user));
+        });
+
+
+        if (user) {
+        console.log("User signed in:", user.email);
+        } else {
+        console.log("No authenticated user");
+        }
+        const token = await auth.currentUser.getIdToken(true); // Force token refresh
+        console.log(token);
+        return token;
+      } catch (error) {
+        console.error("Error fetching token:", error);
+        return null;
+      }
+}
