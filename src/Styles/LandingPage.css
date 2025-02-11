@@ -6,40 +6,38 @@ body {
   box-sizing: border-box;
   width: 100%;
   height: 100vh;
+  background-color: #E9F5F2;
   overflow: hidden;
 }
-
-/* Ensures the entire page takes full height */
 .landing-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   height: 100vh;
-  background-color: #E9F5F2; /* Matches logo's light color */
-}
-
-/* Larger Title */
-.title {
-  margin: 0;
+  background-color: #E9F5F2;
+  padding: 20px;
   text-align: center;
-  margin-bottom: 10px;
-  font-size: 3rem;  /* Increased font size */
-  color: #2D6A4F; /* Dark green */
-  font-weight: bold;
 }
 
-/* Content layout */
+.title {
+  color: #2D6A4F;
+  font-size: 3rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+/* Content Layout */
 .content-container {
+  width: 100%;
+  max-width: 1200px;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 80%;
-  max-width: 1200px;
-  height: 70%;  /* Makes sure it takes full height */
+  flex-wrap: wrap;
+  height: 70%;
 }
 
-/* Enlarged Logo */
 .logo-container {
   display: flex;
   justify-content: center;
@@ -48,76 +46,99 @@ body {
 }
 
 .logo {
+  padding: 0;
   max-width: 100%;
   height: auto;
-  width: 350px;  /* Increased size */
+  width: 250px;
 }
 
-/* Form Container */
 .form-container {
   display: flex;
   justify-content: center;
   flex: 1;
 }
 
-/* Auth Card */
 .auth-card {
   width: 100%;
   max-width: 450px;
   padding: 25px;
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
   border-radius: 10px;
-  background: #f5f5f5; /* Light background for soft look */
+  background: #f5f5f5;
 }
 
-/* Input Fields */
 .input-field {
+  width: 100%;
   margin-bottom: 12px;
 }
 
-/* Buttons */
-.submit-button {
-  background-color: #2D6A4F; /* Dark green */
-  color: white;
-  border: none;
+.submit-button, .google-button {
+  width: 100%;
   padding: 12px;
   margin-bottom: 12px;
   font-size: 1rem;
   cursor: pointer;
+  border: none;
+}
+
+.submit-button {
+  background-color: #2D6A4F;
+  color: white;
 }
 
 .google-button {
   background-color: #db4437;
   color: white;
-  border: none;
-  padding: 12px;
-  margin-bottom: 12px;
-  font-size: 1rem;
-  cursor: pointer;
 }
 
-/* Button Hover Effects */
 .submit-button:hover, .google-button:hover {
   opacity: 0.9;
 }
 
-/* Text Links */
 .text-link {
   color: #2D6A4F;
   font-size: 1rem;
-  margin: auto;
-}
-Text{
-  display: flex;
-  justify-content: center;
-  align-items: center;
- 
-}
-.btn{
-  margin: 0;
-  padding: 0;
 }
 
 .text-link:hover {
   text-decoration: underline;
+}
+
+.btn {
+  margin: 0;
+  padding: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .landing-container {
+      height: auto;
+  }
+  
+  .content-container {
+      flex-direction: column;
+      height: auto;
+  }
+  
+  .logo {
+      width: 150px;
+  }
+  
+  .auth-card {
+      width: 90%;
+  }
+}
+
+@media (max-width: 480px) {
+  .title {
+      font-size: 2rem;
+  }
+  
+  .auth-card {
+      padding: 10px;
+  }
+  
+  .input-field {
+      font-size: 14px;
+  }
 }
