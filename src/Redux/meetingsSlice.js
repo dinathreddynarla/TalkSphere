@@ -18,6 +18,7 @@ export const fetchMeetings = createAsyncThunk('meetings/fetchMeetings', async ()
     }
     catch(err){
         console.log(err);
+        return err
         
     }
   
@@ -25,30 +26,54 @@ export const fetchMeetings = createAsyncThunk('meetings/fetchMeetings', async ()
 
 // Add a meeting
 export const addMeeting = createAsyncThunk('meetings/addMeeting', async (formData) => {
-  const response = await axios.post(
-    'https://talksphere-nyay.onrender.com/meetings',
-    formData,
-    { headers: { Authorization: `Bearer ${token}` } }
-  );
-  return response.data;
+    try{
+        const token = await getFreshToken();
+        const response = await axios.post(
+            'https://talksphere-nyay.onrender.com/meetings',
+            formData,
+            { headers: { Authorization: `Bearer ${token}` } }
+          );
+          return response.data;
+    }
+    catch(err){
+        console.log(err)
+        return err
+    }
+  
 });
 
 // Edit a meeting
 export const editMeeting = createAsyncThunk('meetings/editMeeting', async ({ id, formData }) => {
-  const response = await axios.put(
-    `https://talksphere-nyay.onrender.com/meetings/${id}`,
-    formData,
-    { headers: { Authorization: `Bearer ${token}` } }
-  );
-  return response.data;
+    try{
+        const token = await getFreshToken();
+        const response = await axios.put(
+            `https://talksphere-nyay.onrender.com/meetings/${id}`,
+            formData,
+            { headers: { Authorization: `Bearer ${token}` } }
+          );
+          return response.data;
+    }
+    catch(err){
+        console.log(err)
+        return err
+    }
+  
 });
 
 // Delete a meeting
 export const deleteMeeting = createAsyncThunk('meetings/deleteMeeting', async (id) => {
-  await axios.delete(`https://talksphere-nyay.onrender.com/meetings/${id}`, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
-  return id;
+    try{
+        const token = await getFreshToken();
+        await axios.delete(`https://talksphere-nyay.onrender.com/meetings/${id}`, {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          return id;
+    }
+    catch(err){
+        console.log(err)
+        return err
+    }
+  
 });
 
 const meetingsSlice = createSlice({

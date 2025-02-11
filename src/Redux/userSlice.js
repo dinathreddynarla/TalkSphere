@@ -56,6 +56,7 @@ export const logoutUser = createAsyncThunk("user/logout", async (_, { rejectWith
   try {
     await logout();
     Cookies.remove("session");
+    Navigate("/")
   } catch (error) {
     return rejectWithValue(error.message);
   }

@@ -2,11 +2,11 @@ import * as React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ZegoUIKitPrebuilt } from '@zegocloud/zego-uikit-prebuilt';
 import { APP_ID, SERVER_SECRET } from './constants';
-import { getUser } from "../services/userService";
+// import { getUser } from "../services/userService";
 import axios from "axios";
 import { useState, useEffect } from 'react';
 import Cookies from "js-cookie";
-import { useDispatch,useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 const Room = () => {
   const { roomID } = useParams();
@@ -14,7 +14,6 @@ const Room = () => {
   const [token, setToken] = useState("");
   const [meeting, setMeeting] = useState(null);
   let zpInstance = null;
-  const dispatch = useDispatch();
   const user = useSelector((state) => state.user.user);
   // Fetch user profile
   useEffect(() => {

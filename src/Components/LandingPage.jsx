@@ -1,8 +1,8 @@
 import React, { useState,useEffect } from "react";
-import { useNavigate } from "react-router-dom"; // Import useNavigate hook
+import { useNavigate } from "react-router-dom"; 
 import { loginWithEmailPassword, signupWithEmailPassword, loginWithGoogle, guestLogin, passwordReset } from "../services/authService";
-import "../Styles/LandingPage.css"; // Import the CSS file
-import Logo from "../assets/logo.png"; // Update with the correct path to your logo file
+import "../Styles/LandingPage.css"; 
+import Logo from "../assets/logo.png"; 
 import Cookies from "js-cookie";
 
 const LandingPage = () => {
@@ -12,17 +12,18 @@ const LandingPage = () => {
     const [name, setName] = useState("");
     const [roomID , setRoomID] = useState(null)
     const [confirmPassword, setConfirmPassword] = useState("");
-    const navigate = useNavigate(); // Hook to navigate programmatically
+    const navigate = useNavigate(); 
 
     const changeIsLogin = () => {
         setIsLoginForm((prev) => !prev);
     };
+    
+    //To check user session
     useEffect(() => {
          const cookie = Cookies.get("session")
         const session = cookie ? JSON.parse(cookie) : null ;
         console.log(session);
         
-        // const session = JSON.parse(localStorage.getItem("session"));
         const roomSession = localStorage.getItem("roomID")
 
         if(roomSession){
@@ -32,13 +33,15 @@ const LandingPage = () => {
             navigate("/dashboard");
         }
       }, [navigate]);
+
+    //handle login
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
             await loginWithEmailPassword(email, password);
             console.log("Login successful!");
             if(roomID){
-                navigate(`/room/${roomID}`)
+                navigate(`/room/${roomID}`) // Redirect to Room , if user comes from RoomId
             }else {
                 navigate("/dashboard"); // Redirect to dashboard after successful login
             }
@@ -48,6 +51,7 @@ const LandingPage = () => {
         }
     };
 
+    //handle signup
     const handleSignup = async (e) => {
         e.preventDefault();
         if (password !== confirmPassword) {
@@ -65,6 +69,7 @@ const LandingPage = () => {
         }
     };
 
+    //handle google login
     const handleGoogleLogin = async () => {
         try {
             await loginWithGoogle();
@@ -80,6 +85,7 @@ const LandingPage = () => {
         }
     };
 
+    //handle guest login
     const handleGuestLogin = async () => {
         try {
             await guestLogin();

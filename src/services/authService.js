@@ -1,7 +1,7 @@
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, signInAnonymously ,signOut , onAuthStateChanged, setPersistence, browserLocalPersistence ,sendPasswordResetEmail} from "firebase/auth";
 import { auth } from "./firebaseConfig";
 import Cookies from "js-cookie";
-import { createUser, getUser } from "./userService";
+import { createUser } from "./userService";
 
 
 
@@ -15,7 +15,7 @@ export const loginWithEmailPassword = async (email, password) => {
         const token = await user.getIdToken()
         console.log(token);
         
-        getUser(token)
+        // getUser(token)
         // Set cookie with 1 hour expiration
         const sessionData = { uid: user.uid, token: token };
         Cookies.set("session", JSON.stringify(sessionData), { expires: 1 / 24 });
@@ -50,7 +50,7 @@ export const loginWithGoogle = async () => {
 
         const token = await user.getIdToken()
         // Check if user exists in the database
-        const userInfo = await getUser(token, user.uid);
+        // const userInfo = await getUser(token, user.uid);
 
         if (userInfo.error && userInfo.status === 404) {
             console.log("User not found, creating new user...");
