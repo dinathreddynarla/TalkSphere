@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from "react-redux";
 import { fetchMeetings, addMeeting, editMeeting, deleteMeeting } from "../Redux/meetingsSlice.js";
-import { Modal, Button, Input, DatePicker, Typography, Form, Skeleton, Space } from 'antd';
+import { Modal, Button, Input, DatePicker, Typography, Form, Skeleton, Space, message, Spin } from 'antd';
 import { EditOutlined, DeleteOutlined, PlayCircleOutlined, ScheduleOutlined } from '@ant-design/icons';
 import Cookies from "js-cookie";
 import dayjs from "dayjs";  // Import dayjs for date handling
@@ -23,6 +23,7 @@ const MeetingsPage = () => {
   });
   const [loading, setLoading] = useState(true); // For skeleton loading
   const [form] = Form.useForm();  // Ant Design form hook to handle form state
+  const [isRedirecting, setIsRedirecting] = useState(false); // State to handle redirecting
   const navigate = useNavigate();
   const cookie = Cookies.get("session");
   const session = cookie ? JSON.parse(cookie) : null;
@@ -42,7 +43,6 @@ const MeetingsPage = () => {
 
   useEffect(() => {
     // Simulate data fetching delay
-    
     setTimeout(() => {
       setLoading(false);  // Stop skeleton loading once data is fetched
     }, 1000);
@@ -52,8 +52,10 @@ const MeetingsPage = () => {
     // If editing, dispatch the update action, else create a new meeting
     if (editingMeeting) {
       dispatch(editMeeting({ id: editingMeeting._id, formData: values }));
+      message.success("Meeting updated successfully!");
     } else {
       dispatch(addMeeting(values));
+      message.success("Meeting scheduled successfully!");
     }
 
     setShowModal(false);
@@ -62,7 +64,15 @@ const MeetingsPage = () => {
   };
 
   const handleDelete = (id) => {
-    dispatch(deleteMeeting(id));
+    Modal.confirm({
+      title: 'Are you sure you want to delete this meeting?',
+      okText: 'Yes',
+      cancelText: 'No',
+      onOk: () => {
+        dispatch(deleteMeeting(id));
+        message.success("Meeting deleted successfully!");
+      }
+    });
   };
 
   const handleEdit = (meeting) => {
@@ -77,7 +87,11 @@ const MeetingsPage = () => {
   };
 
   const handleJoin = (roomID) => {
-    navigate(`/room/${roomID}`);
+    message.success("Redirecting to the room...");
+    setIsRedirecting(true);
+    setTimeout(() => {
+      navigate(`/room/${roomID}`);
+    }, 2000);
   };
 
   return (
@@ -85,13 +99,25 @@ const MeetingsPage = () => {
       <Title level={1} className="meetings-title">Meetings</Title>
       
       <Button
-        type="primary"
-        icon={<ScheduleOutlined />}
-        onClick={() => setShowModal(true)}
-        style={{ marginBottom: '20px' }}
-      >
-        Schedule a Meeting
-      </Button>
+  type="primary"
+  icon={<ScheduleOutlined />}
+  onClick={() => setShowModal(true)}
+  style={{
+    marginBottom: '20px',
+    backgroundColor: '#2D6A4F',
+    color: 'white',
+    border: 'none',
+    width: '250px',
+    fontSize:"1.2em",
+    padding: '10px',  // Applies to the entire button, including text
+    display: 'flex',  // Ensures button contents align properly
+    justifyContent: 'center',  // Centers the text horizontally
+    alignItems: 'center',  // Centers the text vertically
+  }}
+>
+  Schedule a Meeting
+</Button>
+
 
       {/* Modal for scheduling/editing meetings */}
       <Modal
@@ -129,13 +155,18 @@ const MeetingsPage = () => {
           </Form.Item>
 
           <div className="modal-buttons" style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <Button onClick={() => setShowModal(false)} style={{ width: '48%' }}>
+            <Button onClick={() => setShowModal(false)} style={{ width: '48%', backgroundColor: '#f5f5f5', color: '#2D6A4F', border: 'none' }}>
               Cancel
             </Button>
             <Button
               type="primary"
               htmlType="submit"
-              style={{ width: '48%' }}
+              style={{
+                width: '48%',
+                backgroundColor: '#2D6A4F',
+                color: 'white',
+                border: 'none'
+              }}
             >
               {editingMeeting ? "Update" : "Schedule"}
             </Button>
@@ -156,27 +187,76 @@ const MeetingsPage = () => {
               <p>{meeting.description}</p>
               <p><strong>Date:</strong> {dayjs(meeting.date).format("YYYY-MM-DD HH:mm")}</p>
               <p><strong>Duration:</strong> {meeting.duration} minutes</p>
-              <div className="meeting-actions" style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <Button
-                  type="primary"
-                  icon={<PlayCircleOutlined />}
-                  onClick={() => handleJoin(meeting._id)}
-                >
-                  Start
-                </Button>
-                <Button
-                  icon={<EditOutlined />}
-                  onClick={() => handleEdit(meeting)}
-                >
-                  Edit
-                </Button>
-                <Button
-                  type="danger"
-                  icon={<DeleteOutlined />}
-                  onClick={() => handleDelete(meeting._id)}
-                >
-                  Delete
-                </Button>
+              <div className="meeting-actions" style={{ display: 'flex', justifyContent: 'center' , gap:"10px" }}>
+              <Button
+  type="primary"
+  icon={<PlayCircleOutlined />}
+  onClick={() => handleJoin(meeting._id)}
+  style={{
+    backgroundColor: '#2D6A4F',
+    color: 'white',
+    border: 'none',
+    width: '120px',
+    transition: 'background-color 0.3s, color 0.3s',  // Smooth transition for both background and color
+  }}
+  onMouseEnter={(e) => {
+    e.target.style.backgroundColor = '#1E4A3B';  // Darker shade on hover
+    e.target.style.color = 'white';  // Text color remains white for readability
+  }}
+  onMouseLeave={(e) => {
+    e.target.style.backgroundColor = '#2D6A4F';  // Original color
+    e.target.style.color = 'white';  // Text color remains white
+  }}
+>
+  Start
+</Button>
+
+<Button
+  icon={<EditOutlined />}
+  onClick={() => handleEdit(meeting)}
+  style={{
+    backgroundColor: '#f5f5f5',
+    color: '#2D6A4F',
+    border: 'none',
+    width: '120px',
+    transition: 'background-color 0.3s, color 0.3s',  // Smooth transition for both background and color
+  }}
+  onMouseEnter={(e) => {
+    e.target.style.backgroundColor = '#e0e0e0';  // Slight darkening on hover
+    e.target.style.color = '#2D6A4F';  // Text remains dark green
+  }}
+  onMouseLeave={(e) => {
+    e.target.style.backgroundColor = '#f5f5f5';  // Original color
+    e.target.style.color = '#2D6A4F';  // Text remains dark green
+  }}
+>
+  Edit
+</Button>
+
+<Button
+  type="danger"
+  icon={<DeleteOutlined />}
+  onClick={() => handleDelete(meeting._id)}
+  style={{
+    backgroundColor: '#f5f5f5',
+    color: '#2D6A4F',
+    border: 'none',
+    width: '120px',
+    transition: 'background-color 0.3s, color 0.3s',  // Smooth transition for both background and color
+  }}
+  onMouseEnter={(e) => {
+    e.target.style.backgroundColor = '#ff4d4f';  // Red on hover
+    e.target.style.color = 'white';  // White text for contrast
+  }}
+  onMouseLeave={(e) => {
+    e.target.style.backgroundColor = '#f5f5f5';  // Original color
+    e.target.style.color = '#2D6A4F';  // Dark green text for readability
+  }}
+>
+  Delete
+</Button>
+
+
               </div>
             </div>
           ))

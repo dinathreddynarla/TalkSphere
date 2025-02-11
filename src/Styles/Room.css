@@ -1,0 +1,32 @@
+/* Loader styles */
+.loader {
+    width: 20px;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: #2D6A4F; /* Dark green color */
+    box-shadow: 0 0 0 0 #2D6A4F; /* Dark green color */
+    animation: l2 1.5s infinite linear;
+    position: relative;
+  }
+  
+  .loader:before,
+  .loader:after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    box-shadow: 0 0 0 0 #2D6A4F; /* Dark green color */
+    animation: inherit;
+    animation-delay: -0.5s;
+  }
+  
+  .loader:after {
+    animation-delay: -1s;
+  }
+  
+  @keyframes l2 {
+    100% {
+      box-shadow: 0 0 0 40px #E9F5F2; /* Light greenish background color */
+    }
+  }
+  
