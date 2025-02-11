@@ -6,15 +6,27 @@ import { APP_ID, SERVER_SECRET } from './constants';
 import axios from "axios";
 import { useState, useEffect } from 'react';
 import Cookies from "js-cookie";
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchUserProfile } from '../Redux/userSlice';
 
 const Room = () => {
   const { roomID } = useParams();
   const navigate = useNavigate();
   const [token, setToken] = useState("");
   const [meeting, setMeeting] = useState(null);
+  const dispatch = useDispatch()
   let zpInstance = null;
-  const user = useSelector((state) => state.user.user);
+  let user = useSelector((state) => state.user.user);
+  useEffect(()=>{
+    const checkUser = async() =>{
+      if(!user){
+        await  dispatch(fetchUserProfile())
+        }
+    }
+    checkUser()
+   
+  },[user,dispatch])
+ 
   // Fetch user profile
   useEffect(() => {
          const cookie = Cookies.get("session")
@@ -63,13 +75,15 @@ const Room = () => {
   // Join room using ZEGOCLOUD
   useEffect(() => {
     const myMeeting = async () => {
+      console.log(user , meeting);
+      
       if (!user || !meeting) return;
       let isHost = user.uid==meeting.host ? true : false ;
 
       if(!isHost){
         let userEmail = user.email??"anonymususer@gmail.com";
         let meetID = roomID;
-        joinMeet(userEmail, meetID)
+      //  await joinMeet(userEmail, meetID)
       }
       try {
         const appID = APP_ID;

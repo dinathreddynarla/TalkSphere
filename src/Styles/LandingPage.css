@@ -1,118 +1,216 @@
 /* General Styles */
 body, html {
-    margin: 0;
-    padding: 0;
-    font-family: Arial, sans-serif;
-    box-sizing: border-box;
-    width: 100%;
-    height: 100%;
-  }
-  
-  .landing-page {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    height: 100vh;
-  }
-  
-  /* Header Section */
-  .header {
-    display: flex;
-    justify-content:center;
-    align-items: center;
-    gap: 10%;
-    padding: 16px;
-    background-color: #2D6A4F; /* Matches the logo color */
-    color: white;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-  
-  .brand-name {
-    font-size: 1.5rem;
-    font-weight: bold;
-  }
-  
-  /* Main Section */
+  margin: 0;
+  padding: 0;
+  font-family: 'Roboto', sans-serif; /* A more modern font */
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+}
+
+.landing-page {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100vh;
+  background-color: #f5f5f5; /* Light background for a soft overall look */
+}
+
+/* Header Section */
+.header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10%;
+  padding: 16px;
+  background-color: #2D6A4F; /* Logo color */
+  color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.brand-name {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+/* Main Section */
+.main-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-grow: 1;
+  padding: 20px;
+  background-color: #E9F5F2; /* Matches logo's light color */
+  height: 100%;
+}
+
+.logo-section {
+  width: 50%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.logo {
+  max-width: 90%;
+  height: auto;
+}
+
+.form-section {
+  width: 50%;
+  max-width: 400px;
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.form-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #1B4332; /* Darker shade */
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* Input Fields */
+.input-field {
+  width: 90%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #74C69D; /* Matches the logo's accent color */
+  border-radius: 4px;
+  font-size: 1rem;
+  transition: all 0.3s ease-in-out;
+}
+
+.input-field:focus {
+  border-color: #52B788;
+  outline: none;
+}
+
+/* Submit Button */
+.submit-button {
+  width: 90%;
+  padding: 10px;
+  background-color: #2D6A4F; /* Matches the header color */
+  color: white;
+  font-size: 1rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s ease-in-out;
+}
+
+.submit-button:hover {
+  background-color: #1B4332;
+  transform: translateY(-2px); /* Small hover effect */
+}
+
+.submit-button:active {
+  transform: translateY(2px); /* Active state when clicked */
+}
+
+/* Signup Text */
+.signup-text {
+  margin-top: 15px;
+  text-align: center;
+  color: #1B4332;
+}
+
+.signup-link {
+  color: #40916C; /* Green accent */
+  text-decoration: none;
+}
+
+.signup-link:hover {
+  text-decoration: underline;
+}
+
+/* Transition between login/signup forms */
+.login-form, .signup-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-section {
+  transition: opacity 0.3s ease-in-out;
+}
+
+.form-section.fade-enter {
+  opacity: 0;
+}
+
+.form-section.fade-enter-active {
+  opacity: 1;
+}
+
+/* Google and Guest Login Buttons */
+.google-login, .guest-login {
+  width: 90%;
+  padding: 12px;
+  margin-top: 10px;
+  background-color: #4285F4;
+  color: white;
+  border-radius: 8px;
+  font-size: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.google-login:hover, .guest-login:hover {
+  background-color: #357AE8;
+}
+
+.google-login i, .guest-login i {
+  margin-right: 10px;
+}
+
+/* Forgot Password Link */
+.forgot-password-link {
+  color: #40916C;
+  text-align: center;
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+.forgot-password-link:hover {
+  text-decoration: underline;
+}
+
+/* Media Queries */
+@media (max-width: 768px) {
   .main-section {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-grow: 1;
-    padding: 20px;
-    background-color: #E9F5F2; /* Matches the logo's light color */
+    padding: 15px;
   }
-  
-  .logo-section {
-    width: 50%;
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-  }
-  
-  .logo {
-    max-width: 90%;
-    height: auto;
-  }
-  
-  .form-section {
-    width: 50%;
-    max-width: 400px;
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  .form-title {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: #1B4332;
-    margin-bottom: 20px;
-    text-align: center;
-  }
-  
+
   .input-field {
-    width: 90%;
     padding: 10px;
-    margin-bottom: 15px;
-    border: 1px solid #74C69D; /* Matches the logo's accent color */
-    border-radius: 4px;
-    font-size: 1rem;
   }
-  
-  .input-field:focus {
-    border-color: #52B788;
-    outline: none;
-  }
-  
+
   .submit-button {
-    width: 90%;
+    padding: 10px 20px;
+  }
+
+  .logo {
+    max-width: 120px;
+  }
+
+  .form-title {
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .landing-page {
     padding: 10px;
-    background-color: #2D6A4F; /* Matches the header color */
-    color: white;
-    font-size: 1rem;
-    font-weight: bold;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
   }
-  
-  .submit-button:hover {
-    background-color: #1B4332;
+
+  .form-section {
+    width: 100%;
   }
-  
-  .signup-text {
-    margin-top: 15px;
-    text-align: center;
-    color: #1B4332;
-  }
-  
-  .signup-link {
-    color: #40916C;
-    text-decoration: none;
-  }
-  
-  .signup-link:hover {
-    text-decoration: underline;
-  }
-  
+}

@@ -1,10 +1,20 @@
 import React from 'react'
+import axios from 'axios';
 import { useState ,useCallback ,useEffect} from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../Styles/HomePage.css';
 import Cookies from "js-cookie";
+import { getFreshToken } from '../services/authService';
+import { duration } from '@mui/material';
 const HomePage = () => {
     const [roomID, setRoomID] = useState("");
+    const [meetingData, setMeetingData] = useState({
+        title: 'Instant Meet',
+        description: 'Instant Meet',
+        date: new Date(),
+        duration:"100"
+      });
+      const [loading, setLoading] = useState(false);
     const navigate = useNavigate()
     const handleRoomIDChange = (e) => {
         setRoomID(e.target.value); 
@@ -19,6 +29,27 @@ const HomePage = () => {
         navigate(`/room/${roomID}`)
     },[navigate,roomID])
 
+    const handleInstantMeet = async () => {
+        setLoading(true);  
+        console.log(meetingData);
+        
+        try {
+          const token = await getFreshToken();
+          const response = await axios.post(
+            'https://talksphere-nyay.onrender.com/meetings',
+            meetingData,
+            { headers: { Authorization: `Bearer ${token}` } }
+          );
+    
+          const meetingId = response.data._id;
+          navigate(`/room/${meetingId}`);
+    
+        } catch (error) {
+          console.error("Error creating instant meeting", error);
+        } finally {
+          setLoading(false);
+        }
+      };
     useEffect(() => {
         const isReload = sessionStorage.getItem("isReload");
         if (isReload) {
@@ -38,6 +69,9 @@ const HomePage = () => {
                 <div className="home-content">
                     <div className="buttons">
                         {/* Meeting ID input and Join button */}
+                        <button onClick={handleInstantMeet} disabled={loading}>
+        {loading ? 'Creating Meeting...' : 'Start Instant Meet'}
+      </button>
                         <input
                             type="text"
                             placeholder="Enter Meeting ID"

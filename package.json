@@ -16,6 +16,7 @@
     "@reduxjs/toolkit": "^2.5.1",
     "@tailwindcss/vite": "^4.0.0",
     "@zegocloud/zego-uikit-prebuilt": "^2.14.1",
+    "antd": "^5.23.4",
     "axios": "^1.7.9",
     "firebase": "^11.1.0",
     "js-cookie": "^3.0.5",
