@@ -1,0 +1,14 @@
+name: Delete Expired Meetings
+
+on:
+  schedule:
+    - cron: "30 18 * * *"  # Runs at 12:00 AM IST (18:30 UTC)
+  workflow_dispatch:  # Allows manual execution
+
+jobs:
+  delete-expired-meetings:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call Delete Expired Meetings API
+        run: |
+          curl -X DELETE "https://talksphere-nyay.onrender.com/cron/delete-expired-meetings" -H "x-api-key:y7d6d8i3d6n0e4a9r7t5h"
