@@ -29,7 +29,12 @@ const Room = () => {
     // Store the current location as the previous page to be used later
     sessionStorage.setItem('previousPage', location.pathname);
   }, [location.pathname]);
-
+  useEffect(() => {
+    window.alert = () => {}; // Suppress all alerts
+    return () => {
+      window.alert = alert; // Restore original alert on unmount
+    };
+  }, []);
   useEffect(() => {
     const checkUser = async () => {
       if (!user) {
@@ -98,7 +103,7 @@ const Room = () => {
       if (!isHost) {
         let userEmail = user.email ?? 'anonymususer@gmail.com';
         let meetID = roomID;
-        //  await joinMeet(userEmail, meetID)
+        await joinMeet(userEmail, meetID)
       }
       try {
         const appID = APP_ID;
