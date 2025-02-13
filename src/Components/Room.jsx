@@ -15,6 +15,7 @@ const Room = () => {
   const [token, setToken] = useState('');
   const [meeting, setMeeting] = useState(null);
   const [meetingNotFound, setMeetingNotFound] = useState(false);
+  const [meetingNotStarted,setMeetingNotStarted] = useState(false)
   const [loading, setLoading] = useState(true); // State for loading
   const dispatch = useDispatch();
   let zpInstance = null;

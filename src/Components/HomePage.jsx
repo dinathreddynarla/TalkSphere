@@ -12,8 +12,7 @@ const HomePage = () => {
   const [meetingData, setMeetingData] = useState({
     title: 'Instant Meet',
     description: 'Instant Meet',
-    date: new Date(),
-    duration: "100"
+    date: new Date()
   });
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();

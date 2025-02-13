@@ -19,7 +19,6 @@ const MeetingsPage = () => {
     title: "",
     description: "",
     date: dayjs(),  // Set default value as dayjs instance
-    duration: ""
   });
   const [loading, setLoading] = useState(true); // For skeleton loading
   const [form] = Form.useForm();  // Ant Design form hook to handle form state
@@ -60,7 +59,7 @@ const MeetingsPage = () => {
 
     setShowModal(false);
     setEditingMeeting(null);
-    setFormData({ title: "", description: "", date: dayjs(), duration: "" });
+    setFormData({ title: "", description: "", date: dayjs() });
   };
 
   const handleDelete = (id) => {
@@ -80,8 +79,7 @@ const MeetingsPage = () => {
     setFormData({
       title: meeting.title,
       description: meeting.description,
-      date: dayjs(meeting.date),  // Convert to dayjs instance
-      duration: meeting.duration,
+      date: dayjs(meeting.date)  // Convert to dayjs instance
     });
     setShowModal(true);
   };
@@ -150,10 +148,6 @@ const MeetingsPage = () => {
             />
           </Form.Item>
 
-          <Form.Item label="Duration (minutes)" name="duration" rules={[{ required: true, message: 'Please enter the duration!' }]}>
-            <Input type="number" />
-          </Form.Item>
-
           <div className="modal-buttons" style={{ display: 'flex', justifyContent: 'space-between' }}>
             <Button onClick={() => setShowModal(false)} style={{ width: '48%', backgroundColor: '#f5f5f5', color: '#2D6A4F', border: 'none' }}>
               Cancel
@@ -186,7 +180,6 @@ const MeetingsPage = () => {
               <Title level={3} className="meeting-title">{meeting.title}</Title>
               <p>{meeting.description}</p>
               <p><strong>Date:</strong> {dayjs(meeting.date).format("YYYY-MM-DD HH:mm")}</p>
-              <p><strong>Duration:</strong> {meeting.duration} minutes</p>
               <div className="meeting-actions" style={{ display: 'flex', justifyContent: 'center' , gap:"10px" }}>
               <Button
   type="primary"
