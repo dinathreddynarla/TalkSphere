@@ -11,7 +11,7 @@ const HomePage = () => {
   const [roomID, setRoomID] = useState("");
   const [meetingData, setMeetingData] = useState({
     title: 'Instant Meet',
-    description: 'Instant Meet',
+    description: `Instant Meet - ${new Date().toISOString()}`, // Unique with timestamp
     date: new Date()
   });
   const [loading, setLoading] = useState(false);
