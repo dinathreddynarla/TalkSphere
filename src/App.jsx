@@ -1,6 +1,6 @@
 import * as React from "react";
 import {Route, Routes } from "react-router-dom";
-import LandingPage from "./Components/LandingPage";
+import LandingPage from "./Components/LandingPage/LandingPage";
 import Dashboard from "./Components/Dashboard"; 
 import Protected from "./Components/Protected";
 import Room from './Components/Room'

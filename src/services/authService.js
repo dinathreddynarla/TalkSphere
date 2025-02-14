@@ -26,9 +26,7 @@ export const loginWithEmailPassword = async (email, password) => {
 };
 
 // Register with email/password
-export const signupWithEmailPassword = async (name,email, password) => {
-    console.log(name,email,password);
-    
+export const signupWithEmailPassword = async (name,email, password) => { 
     try {
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         const user = userCredential.user; // Extract the user from the response
@@ -53,7 +51,6 @@ export const loginWithGoogle = async () => {
         const userInfo = await getUser(token, user.uid);
 
         if (userInfo.error && userInfo.status === 404) {
-            console.log("User not found, creating new user...");
             await createUser(token, user.uid, user.email, user.displayName);
         }
         // Set cookie with 1 hour expiration
@@ -98,7 +95,6 @@ export const logout = async () => {
 export const passwordReset = async (email) =>{
     try {
         await sendPasswordResetEmail(auth, email);
-        console.log(`Password reset email sent to ${email}`);
       } catch (error) {
         console.error("Error sending password reset email:", error.message);
         throw error;
@@ -108,19 +104,11 @@ export const passwordReset = async (email) =>{
 export const getFreshToken = async()=>{
       try {
         await setPersistence(auth, browserLocalPersistence);
-        console.log("Persistence mode set.");
 
         // Monitor authentication state changes
         const user = await new Promise((resolve) => {
         onAuthStateChanged(auth, (user) => resolve(user));
-        });
-
-
-        if (user) {
-        console.log("User signed in:", user.email);
-        } else {
-        console.log("No authenticated user");
-        }
+        })
         const token = await auth.currentUser.getIdToken(true); // Force token refresh
         console.log(token);
         return token;

@@ -81,7 +81,7 @@ const Dashboard = () => {
   ];
 
   return (
-    <Layout style={{ minHeight: "100vh", backgroundColor: "#f5f5f5" }}>
+    <Layout style={{ height: "100vh", backgroundColor: "#f5f5f5", width:"100vw" }}>
       {/* Header */}
       <Header style={{ backgroundColor: "#2D6A4F", padding: "20px 20px" }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
