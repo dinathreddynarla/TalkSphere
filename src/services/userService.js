@@ -1,4 +1,5 @@
 import axios from "axios";
+import { baseUrl } from "../App";
 
 export const createUser = async(token,uid,email,name) =>{
     let data= {
@@ -8,7 +9,7 @@ export const createUser = async(token,uid,email,name) =>{
     }
     try{
         // Create new user
-       let response = await axios.post("https://talksphere-nyay.onrender.com/users",data, {
+       let response = await axios.post(`${baseUrl}/users`,data, {
             headers: {
               Authorization: `Bearer ${token}`
             }
@@ -25,7 +26,7 @@ export const updateUser = async(token,userData) =>{
 
     console.log(userData);
     
-     let response = await axios.put("https://talksphere-nyay.onrender.com/users",userData, {
+     let response = await axios.put(`${baseUrl}/users`,userData, {
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -42,7 +43,7 @@ export const getUser = async(token) =>{
    
     try{
         // Create new user
-       let response =  await axios.get("https://talksphere-nyay.onrender.com/users", {
+       let response =  await axios.get(`${baseUrl}/users`, {
             headers: {
               Authorization: `Bearer ${token}`
             }

@@ -7,12 +7,12 @@ import { BrowserRouter } from 'react-router-dom';
 import store from './Redux/store.js'; // Ensure this is the correct path to your Redux store
 
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
+  // <StrictMode>
     <Provider store={store}>
       <BrowserRouter>
         <App />
       </BrowserRouter>
     </Provider>
-  </StrictMode>
+  // </StrictMode>
 );
 

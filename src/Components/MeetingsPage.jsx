@@ -39,6 +39,10 @@ const MeetingsPage = () => {
       sessionStorage.removeItem("isReload");
     }
   }, [navigate]);
+  
+  useEffect(() => {
+    form.setFieldsValue(formData); // Update form values when formData changes
+  }, [formData, form]);
 
   useEffect(() => {
     // Simulate data fetching delay
@@ -60,8 +64,9 @@ const MeetingsPage = () => {
     setShowModal(false);
     setEditingMeeting(null);
     setFormData({ title: "", description: "", date: dayjs() });
+    form.resetFields()
   };
-
+console.log(formData)
   const handleDelete = (id) => {
     Modal.confirm({
       title: 'Are you sure you want to delete this meeting?',
@@ -91,7 +96,11 @@ const MeetingsPage = () => {
       navigate(`/room/${roomID}`);
     }, 2000);
   };
-
+  const handleCancel= ()=>{
+    setFormData({ title: "", description: "", date: dayjs() });
+    form.resetFields()
+    setShowModal(false)
+  }
   return (
     <div className="meetings-container">
       <Title level={1} className="meetings-title">Meetings</Title>
@@ -121,7 +130,7 @@ const MeetingsPage = () => {
       <Modal
         title={editingMeeting ? "Edit Meeting" : "Schedule Meeting"}
         open={showModal}
-        onCancel={() => setShowModal(false)}
+        onCancel={handleCancel}
         footer={null}
         width={600}
       >
@@ -130,7 +139,7 @@ const MeetingsPage = () => {
           initialValues={formData}
           onFinish={handleFormSubmit}  // Use onFinish instead of onSubmit
         >
-          <Form.Item label="Title" name="title" rules={[{ required: true, message: 'Please enter the title!' }]}>
+          <Form.Item label="Title" name="title"  rules={[{ required: true, message: 'Please enter the title!' }]}>
             <Input />
           </Form.Item>
 
@@ -149,7 +158,7 @@ const MeetingsPage = () => {
           </Form.Item>
 
           <div className="modal-buttons" style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <Button onClick={() => setShowModal(false)} style={{ width: '48%', backgroundColor: '#f5f5f5', color: '#2D6A4F', border: 'none' }}>
+            <Button onClick={handleCancel} style={{ width: '48%', backgroundColor: '#f5f5f5', color: '#2D6A4F', border: 'none' }}>
               Cancel
             </Button>
             <Button

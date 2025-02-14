@@ -2,12 +2,12 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { getFreshToken } from '../services/authService';
 import axios from 'axios';
 import Cookies from 'js-cookie';
-
+import { baseUrl } from '../App';
 // Fetch meetings
 export const fetchMeetings = createAsyncThunk('meetings/fetchMeetings', async (_, { rejectWithValue }) => {
   try {
     const token = await getFreshToken();
-    const response = await axios.get('https://talksphere-nyay.onrender.com/meetings', {
+    const response = await axios.get(`${baseUrl}/meetings`, {
       headers: { Authorization: `Bearer ${token}` },
     });
     return response.data;
@@ -25,7 +25,7 @@ export const addMeeting = createAsyncThunk('meetings/addMeeting', async (formDat
     console.log(formData);
     
     const response = await axios.post(
-      'https://talksphere-nyay.onrender.com/meetings',
+      `${baseUrl}/meetings`,
       formData,
       { headers: { Authorization: `Bearer ${token}` } }
     );
@@ -42,7 +42,7 @@ export const editMeeting = createAsyncThunk('meetings/editMeeting', async ({ id,
   try {
     const token = await getFreshToken();
     const response = await axios.put(
-      `https://talksphere-nyay.onrender.com/meetings/${id}`,
+      `${baseUrl}/meetings/${id}`,
       formData,
       { headers: { Authorization: `Bearer ${token}` } }
     );
@@ -58,7 +58,7 @@ export const editMeeting = createAsyncThunk('meetings/editMeeting', async ({ id,
 export const deleteMeeting = createAsyncThunk('meetings/deleteMeeting', async (id, { rejectWithValue }) => {
   try {
     const token = await getFreshToken();
-    await axios.delete(`https://talksphere-nyay.onrender.com/meetings/${id}`, {
+    await axios.delete(`${baseUrl}/meetings/${id}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
     return id;

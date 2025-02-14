@@ -3,11 +3,12 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { ZegoUIKitPrebuilt } from '@zegocloud/zego-uikit-prebuilt';
 import { APP_ID, SERVER_SECRET } from './constants';
 import axios from 'axios';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Cookies from 'js-cookie';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchUserProfile } from '../Redux/userSlice';
 import "../Styles/Room.css"
+import { baseUrl } from '../App';
 
 const Room = () => {
   const { roomID } = useParams();
@@ -18,13 +19,11 @@ const Room = () => {
   const [meetingNotStarted,setMeetingNotStarted] = useState(false)
   const [loading, setLoading] = useState(true); // State for loading
   const dispatch = useDispatch();
+  const hasStartedMeeting = useRef(false);
+  const hasJoinedMeeting = useRef(false);
   let zpInstance = null;
   let user = useSelector((state) => state.user.user);
 
-  const handleBackNavigation = () => {
-    // Force the navigate to the dashboard page
-    navigate('/dashboard'); // Replace with actual dashboard path
-  };
 
   useEffect(() => {
     // Store the current location as the previous page to be used later
@@ -36,26 +35,27 @@ const Room = () => {
       window.alert = alert; // Restore original alert on unmount
     };
   }, []);
+  
   useEffect(() => {
-    const checkUser = async () => {
+    console.log("hello")
       if (!user) {
-        await dispatch(fetchUserProfile());
+        dispatch(fetchUserProfile());
       }
-    };
-    checkUser();
-  }, [user, dispatch]);
+  }, []);
+  // 
 
   // Fetch user profile
   useEffect(() => {
     const cookie = Cookies.get('session');
     const session = cookie ? JSON.parse(cookie) : null;
-
     if (!session || !session.token) {
       localStorage.setItem('roomID', roomID);
       navigate('/');
       return;
     }
     localStorage.removeItem('roomID');
+    // console.log(session.token);
+    
     setToken(session.token);
   }, [navigate, roomID]);
 
@@ -65,7 +65,7 @@ const Room = () => {
       if (!token) return;
       try {
         const response = await axios.get(
-          `https://talksphere-nyay.onrender.com/meetings/${roomID}`,
+          `${baseUrl}/meetings/${roomID}`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
         if (!response.data) {
@@ -80,31 +80,72 @@ const Room = () => {
       setLoading(false); // Stop loading once the meeting data is fetched
     };
     fetchMeeting();
-  }, [roomID, token]);
+  }, [token]);
+
+
+const startMeetByHost = async () => { 
+  try {
+    const response = await fetch(`${baseUrl}/meetings/startmeet/${roomID}`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json"
+      }
+    });
+
+    const data = await response.json();
+    // console.log(data);
+  } catch (error) {
+    console.error("Error fetching meetings:", error);
+  }
+};
+
 
   const joinMeet = async (email, id) => {
+    if(hasJoinedMeeting.current) return;
+    hasJoinedMeeting.current = true;
     try {
       const response = await axios.post(
-        `https://talksphere-nyay.onrender.com/meetings/joinmeet/${id}`,
+        `${baseUrl}/meetings/joinmeet/${id}`,
         { email: email },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      console.log(response);
+  
+      if (response.data.message === "Meeting not started yet") {
+        setMeetingNotStarted(true); // Set fallback when the meeting is not started
+      }
+      // console.log(response);
     } catch (error) {
-      console.error('Error fetching meetings:', error);
+      if (error.response && error.response.status === 404) {
+        if (error.response.data.message === "Meeting not started yet") {
+          setMeetingNotStarted(true)
+          return error.response.data.message
+        }
+      }else  {
+
+        console.error('Error fetching meetings:', error);
+      }
     }
   };
-
+  
   // Join room using ZEGOCLOUD
   useEffect(() => {
     const myMeeting = async () => {
       if (!user || !meeting) return;
       let isHost = user.uid == meeting.host ? true : false;
-
+      if(isHost && !hasStartedMeeting){
+       hasStartedMeeting.current = true
+        await startMeetByHost()
+      }
       if (!isHost) {
         let userEmail = user.email ?? 'anonymususer@gmail.com';
         let meetID = roomID;
-        await joinMeet(userEmail, meetID)
+       let message =  await joinMeet(userEmail, meetID)
+        // console.log(message)
+       if(message == "Meeting not started yet") {
+        // console.log(meetingNotStarted);
+        return;
+       }
       }
       try {
         const appID = APP_ID;
@@ -145,9 +186,24 @@ const Room = () => {
       }
     };
     myMeeting();
-  }, [user, meeting, roomID]);
+  }, [user, meeting]);
 
-  if (meetingNotFound) {
+  if (loading) {
+    return (
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100vh',
+          backgroundColor: '#E9F5F2',
+        }}
+      >
+        <div className="loader"></div>
+      </div>
+    );
+  }
+  if (!loading && meetingNotFound){
     return (
       <div
         style={{
@@ -184,7 +240,9 @@ const Room = () => {
     );
   }
 
-  if (loading) {
+  if (!loading && meeting && meetingNotStarted) {
+    // console.log(meetingNotStarted);
+    
     return (
       <div
         style={{
@@ -193,13 +251,33 @@ const Room = () => {
           alignItems: 'center',
           height: '100vh',
           backgroundColor: '#E9F5F2',
+          color: '#2D6A4F',
+          textAlign: 'center',
         }}
       >
-        <div className="loader"></div>
+        <div>
+          <h1 style={{ fontSize: '3rem', fontWeight: 'bold' }}>Oops! Meeting Not Started</h1>
+          <p style={{ fontSize: '1.5rem', marginBottom: '20px' }}>
+            The host hasn't started the meeting yet. Please wait and try again later.
+          </p>
+          <button
+            onClick={() => navigate('/')}
+            style={{
+              padding: '10px 20px',
+              fontSize: '1.2rem',
+              backgroundColor: '#2D6A4F',
+              color: 'white',
+              border: 'none',
+              borderRadius: '5px',
+              cursor: 'pointer',
+            }}
+          >
+            Go to Home
+          </button>
+        </div>
       </div>
     );
   }
-
   return (
     <div
       className="myCallContainer"

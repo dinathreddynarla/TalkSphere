@@ -6,6 +6,9 @@ import Protected from "./Components/Protected";
 import Room from './Components/Room'
 import NotFound from "./Components/NotFound";
 
+// export const baseUrl = "http://localhost:5000"
+export const baseUrl = "https://talksphere-nyay.onrender.com"
+
 const App = () => {
     return (
 
@@ -17,10 +20,7 @@ const App = () => {
                 <Route path="/room/:roomID" element={<Room />} />
                  {/* Catch-all route for any undefined path */}
                 <Route path="*" element={<NotFound />} />
-            </Routes>
-
-        
-            
+            </Routes>    
     );
 };
 

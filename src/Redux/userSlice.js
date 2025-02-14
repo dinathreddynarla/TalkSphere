@@ -3,6 +3,7 @@ import { getUser , updateUser } from "../services/userService";
 import { logout} from "../services/authService"
 import Cookies from "js-cookie";
 
+
 // Fetch user profile async action
 export const fetchUserProfile = createAsyncThunk(
   "user/fetchProfile",

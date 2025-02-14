@@ -39,7 +39,7 @@ const HomePage = () => {
     try {
       const token = await getFreshToken();
       const response = await axios.post(
-        'https://talksphere-nyay.onrender.com/meetings',
+        `${baseUrl}/meetings`,
         meetingData,
         { headers: { Authorization: `Bearer ${token}` } }
       );
