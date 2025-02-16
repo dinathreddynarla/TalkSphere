@@ -1,5 +1,6 @@
 /* Loader styles */
 .loader {
+    margin: auto;
     width: 20px;
     aspect-ratio: 1;
     border-radius: 50%;

@@ -197,6 +197,7 @@ const startMeetByHost = async () => {
           alignItems: 'center',
           height: '100vh',
           backgroundColor: '#E9F5F2',
+          width: '100vw'
         }}
       >
         <div className="loader"></div>

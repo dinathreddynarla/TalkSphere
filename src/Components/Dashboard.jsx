@@ -1,7 +1,9 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef ,useState } from "react";
 import { Routes, Route, Link, useNavigate } from "react-router-dom";
 import { Layout, Menu, Button, Typography, Spin, Modal, message } from "antd";
-import { LogoutOutlined } from "@ant-design/icons";
+import { MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/icons";
+import { HomeOutlined, VideoCameraOutlined, UserOutlined } from "@ant-design/icons";
+import { LogoutOutlined, ExportOutlined } from "@ant-design/icons";
 import HomePage from "./HomePage";
 import MeetingsPage from "./MeetingsPage";
 import ProfilePage from "./ProfilePage";
@@ -11,9 +13,7 @@ import { fetchMeetings } from "../Redux/meetingsSlice.js";
 import { fetchUserProfile } from "../Redux/userSlice.js";
 import { logoutUser } from "../Redux/userSlice.js";
 import "../Styles/Dashboard.css";
-
-// Import your logo image
-import logo from '../assets/favicon2.png';  // Adjust the path based on where your logo is stored
+import logo from '../assets/favicon2.png';
 
 const { Header, Content, Sider } = Layout;
 const { Title } = Typography;
@@ -25,6 +25,9 @@ const Dashboard = () => {
   const user = useSelector((state) => state.user.user);
   const status = useSelector((state) => state.user.status);
   const error = useSelector((state) => state.user.error);
+  const [collapsed, setCollapsed] = useState(window.innerWidth <= 768);
+  const [isHovered, setIsHovered] = useState(false);
+  
 
   // Ref to track whether the toast has been shown
   const hasShownToast = useRef(false);
@@ -39,6 +42,15 @@ const Dashboard = () => {
       sessionStorage.removeItem('previousPage'); // Clear the stored route after reloading
     }
   }, [dispatch, location.pathname]);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setCollapsed(window.innerWidth <= 768); // Collapse when screen is ≤ 768px
+    };
+  
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   useEffect(() => {
     dispatch(fetchMeetings());
@@ -75,52 +87,72 @@ const Dashboard = () => {
 
   // Define items for the Menu
   const menuItems = [
-    { label: <Link to="/dashboard">Home</Link>, key: "1" },
-    { label: <Link to="/dashboard/meetings">Meetings</Link>, key: "2" },
-    { label: <Link to="/dashboard/profile">Profile</Link>, key: "3" },
+    { label: <Link to="/dashboard">Home</Link>, key: "1", icon: <HomeOutlined /> },
+    { label: <Link to="/dashboard/meetings">Meetings</Link>, key: "2", icon: <VideoCameraOutlined /> },
+    { label: <Link to="/dashboard/profile">Profile</Link>, key: "3", icon: <UserOutlined /> },
   ];
 
   return (
     <Layout style={{ height: "100vh", backgroundColor: "#f5f5f5", width:"100vw" }}>
       {/* Header */}
-      <Header style={{ backgroundColor: "#2D6A4F", padding: "20px 20px" }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+      <Header style={{ backgroundColor: "#2D6A4F", padding: "0 20px", display: "flex", alignItems: "center" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" , width:"100%" }}>
           {/* Logo and Brand Name */}
           <div style={{ display: "flex", alignItems: "center" }}>
             <img
-              src={logo} // Path to your logo file
+              src={logo}
               alt="TalkSphere Logo"
               style={{ width: 40, height: 40, marginRight: 15 , alignSelf:'center'   }}
             />
-            <Title level={3} style={{ color: "#fff", margin: 0, textAlign: "center" }}>TalkSphere</Title>
+            <Title level={3} style={{ color: "#fff", margin: 0, textAlign: "center",marginRight: 9 }}>TalkSphere</Title>
+           {window.innerWidth > 768 && ( 
+            <Button
+              type="text"
+              icon={collapsed ? <MenuUnfoldOutlined style={{ color: "#fff", fontSize: 22 }} /> 
+                              : <MenuFoldOutlined style={{ color: "#fff", fontSize: 22 }} />}
+              onClick={() => setCollapsed(!collapsed)}
+              style={{ marginLeft: 8 }}
+            /> )}
           </div>
 
           {/* Logout Button */}
           <Button
-            type="link"
-            onClick={handleLogout}
-            style={{ color: "#fff", fontSize: "16px"  ,fontWeight:'bold'}}
-            icon={<LogoutOutlined />}
-          >
-            Logout
-          </Button>
+      type="link"
+      onClick={handleLogout}
+      className="logout-btn"
+      style={{ 
+        color: "#fff", 
+        fontSize: "16px", 
+        fontWeight: "bold", 
+        display: "flex", 
+        alignItems: "center", 
+        gap: "8px"
+      }}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      {isHovered ? <ExportOutlined style={{ fontSize: "20px" }} /> : <LogoutOutlined style={{ fontSize: "20px" }} />}
+      {window.innerWidth > 768 ? "Logout" : ""}
+    </Button>
         </div>
       </Header>
 
       <Layout style={{ flexDirection: "row" }}>
         {/* Sidebar */}
         <Sider
-          width={200}
-          style={{
-            backgroundColor: "#E9F5F2",
-            padding: "10px",
-            position: "sticky",
-            top: 0,
-            height: "100vh",
-            zIndex: 1,
+            width={200}
+            collapsible
+            collapsed={collapsed}
+            collapsedWidth={window.innerWidth > 768 ? 0 : 50}
+            trigger={null} 
+            style={{
+              backgroundColor: "#E9F5F2",
+              padding: "10px",
+              height: "100vh",
+              transition: "all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1)",
+              overflow: "hidden", 
+              boxShadow: collapsed ? "none" : "2px 0px 10px rgba(0, 0, 0, 0.1)",
           }}
-          breakpoint="lg"
-          collapsedWidth="0"
         >
           <Menu mode="inline" defaultSelectedKeys={["1"]} style={{ height: "100%", borderRight: 0 }} items={menuItems} />
         </Sider>
@@ -131,12 +163,15 @@ const Dashboard = () => {
             style={{
               padding: 24,
               margin: 0,
-              minHeight: 280,
+              minHeight: "90vh",
               backgroundColor: "#fff",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
             }}
           >
             {status === "loading" ? (
-              <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+              <div style={{ display: "flex", flexDirection: "column", alignItems: "center" , justifyContent:"center" , }}>
                 <Spin size="large" />
                 <p style={{ marginTop: 10, fontSize: "16px", fontWeight: "bold", color: "#2D6A4F" }}>
                   Loading user details...
