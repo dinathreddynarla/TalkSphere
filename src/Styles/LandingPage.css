@@ -149,6 +149,7 @@ body {
   
   .landing-container {
       height: auto;
+      padding: 0;
   }
   
   .content-container {
