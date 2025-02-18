@@ -25,7 +25,7 @@ const Dashboard = () => {
   const user = useSelector((state) => state.user.user);
   const status = useSelector((state) => state.user.status);
   const error = useSelector((state) => state.user.error);
-  const [collapsed, setCollapsed] = useState(true);
+  const [collapsed, setCollapsed] = useState(window.innerWidth >768);
   const [isHovered, setIsHovered] = useState(false);
   
 
