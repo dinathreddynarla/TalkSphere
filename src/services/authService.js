@@ -13,7 +13,7 @@ export const loginWithEmailPassword = async (email, password) => {
         const userCredential = await signInWithEmailAndPassword(auth, email, password);
         const user = userCredential.user; // Extract the user from the response
         const token = await user.getIdToken()
-        console.log(token);
+        //console.log(token);
         
         // getUser(token)
         // Set cookie with 1 hour expiration
@@ -110,7 +110,7 @@ export const getFreshToken = async()=>{
         onAuthStateChanged(auth, (user) => resolve(user));
         })
         const token = await auth.currentUser.getIdToken(true); // Force token refresh
-        console.log(token);
+        //console.log(token);
         return token;
       } catch (error) {
         console.error("Error fetching token:", error);

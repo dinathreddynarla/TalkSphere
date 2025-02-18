@@ -15,7 +15,7 @@ const Login = ({ setIsLoginForm, roomID, setLoading }) => {
     const setButtonLoading = (key, state) => {
         setLoadingState((prev) => ({ ...prev, [key]: state }));
     };
-    console.log(loadingState);
+    //console.log(loadingState);
 
     const handleLogin = async (values) => {
         setButtonLoading("login", true);

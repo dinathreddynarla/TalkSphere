@@ -24,14 +24,14 @@ export const createUser = async(token,uid,email,name) =>{
 export const updateUser = async(token,userData) =>{
   try{
 
-    console.log(userData);
+    //console.log(userData);
     
      let response = await axios.put(`${baseUrl}/users`,userData, {
           headers: {
             Authorization: `Bearer ${token}`
           }
         });
-        console.log(response.data.user);
+        //console.log(response.data.user);
       return response.data.user
   }catch (error) {
       console.log(error);
@@ -48,8 +48,8 @@ export const getUser = async(token) =>{
               Authorization: `Bearer ${token}`
             }
           });
-        console.log(response);
-        console.log(response.data.user);
+        //console.log(response);
+        //console.log(response.data.user);
       return response.data.user
         
     }catch (error) {

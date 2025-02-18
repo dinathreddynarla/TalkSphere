@@ -21,11 +21,11 @@ const { Title } = Typography;
 const Dashboard = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
+  
   const user = useSelector((state) => state.user.user);
   const status = useSelector((state) => state.user.status);
   const error = useSelector((state) => state.user.error);
-  const [collapsed, setCollapsed] = useState(window.innerWidth >768);
+  const [collapsed, setCollapsed] = useState(window.innerWidth < 768);
   const [isHovered, setIsHovered] = useState(false);
   
 

@@ -15,7 +15,7 @@ export const fetchUserProfile = createAsyncThunk(
         return rejectWithValue("No session found");
       }
       const response = await getUser(session.token);
-      console.log(response);
+      //console.log(response);
       
       return response;
     } catch (error) {
@@ -39,7 +39,7 @@ export const updateUserProfile = createAsyncThunk(
           return rejectWithValue("No session found");
         }
         const response = await updateUser(session.token,data);
-        console.log(response);
+        //console.log(response);
         
         return response;
       } catch (error) {

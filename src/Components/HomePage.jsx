@@ -72,7 +72,7 @@ const HomePage = () => {
       <Card
         className="instantMeet-card"
         title="Video Calls and Meetings for Everyone"
-        className="card-style"
+        
       >
         <p className="card-text">Connecting Conversations, Anytime</p>
 

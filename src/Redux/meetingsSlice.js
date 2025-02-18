@@ -22,7 +22,7 @@ export const fetchMeetings = createAsyncThunk('meetings/fetchMeetings', async (_
 export const addMeeting = createAsyncThunk('meetings/addMeeting', async (formData, { rejectWithValue }) => {
   try {
     const token = await getFreshToken();
-    console.log(formData);
+    //console.log(formData);
     
     const response = await axios.post(
       `${baseUrl}/meetings`,

@@ -37,7 +37,7 @@ const Room = () => {
   }, []);
   
   useEffect(() => {
-    console.log("hello")
+    //console.log("hello")
       if (!user) {
         dispatch(fetchUserProfile());
       }
