@@ -1,6 +1,7 @@
 /* MeetingsPage.css */
+
 .meetings-container {
-  border: 2px solid red;
+
   padding: 20px;
   background-color: #f5f5f5;
   overflow: scroll;
@@ -9,9 +10,39 @@
   scrollbar-width: none;
 }
 
+.meeting-header {
+  
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 12%;
+  margin-bottom: 10px;
+}
+
+.meetings-list {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: baseline;
+  gap: 10px;
+}
+
+.meeting-card-header{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
 .meetings-title {
-  text-align: center;
   color: #2D6A4F;
+}
+
+.meeting-title-head{
+  display: flex;
+
+  justify-content: space-between;
+  align-items: center;
 }
 
 .modal-buttons {
@@ -20,45 +51,129 @@
 }
 
 .meeting-card {
+
   margin-bottom: 20px;
   padding: 15px;
-  border: 1px solid #ddd;
+
   border-radius: 8px;
   background-color: #fff;
-  width: 100%; /* Allow card to take full width */
+  width: 300px; /* Allow card to take full width */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Added subtle shadow */
+  transition: transform 0.2s ease, box-shadow 0.2s ease; /* Smooth transition */
+}
+
+.meeting-card:hover {
+  transform: translateY(-5px); /* Lift card on hover */
+  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2); /* Deeper shadow on hover */
+}
+
+.meeting-card .meeting-title {
+  color: #2D6A4F; /* Title color */
+  font-size: 1.5em;
+  font-weight: 600;
+  margin-bottom: 10px;
 }
 
 .meeting-actions button {
   width: 48%;
 }
 
+
 /* Flexbox for layout of meetings */
-.meetings-list {
+
+.meeting-actions {
   display: flex;
-  flex-wrap: wrap;
   justify-content: space-between;
+  align-items: center;
+  gap: 5px;
 }
 
+.meeting-action-button {
+  width: 48%;
+}
+
+.more-btn {
+  width: 48%; /* Keep consistent with other buttons */
+}
+
+.meeting-actions .ant-dropdown-menu-item {
+  font-size: 14px;
+  padding: 10px;
+}
+
+.meeting-actions .ant-dropdown-menu-item:hover {
+  background-color: #f5f5f5; /* Highlight on hover */
+}
+
+.skeleton-card{
+
+    width: calc(25% - 10px);  /* Desktop: 4 cards in a row */
+    margin-bottom: 20px;
+}
+.no-meetings{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.no-meetings img{
+  width: 30%;
+  height: auto;
+}
 /* Media Query for smaller screens (mobile) */
 @media (max-width: 768px) {
   .meetings-container {
     padding: 10px;
   }
 
+  .meeting-header {
+    
+    display: flex;
+   
+    align-items: center;
+    padding: 0;
+    margin-bottom: 10px;
+  }
+
   .meeting-card {
     margin-bottom: 15px;
     padding: 10px;
-    width: 100%; /* Full width for mobile */
+    width: 48%; 
   }
+  .skeleton-card{
+
+    width: calc(50% - 10px);  
+    margin-bottom: 20px;
+}
 
   .modal-buttons button {
     width: 48%;
   }
 }
 
-/* Media Query for larger screens (desktop) */
-@media (min-width: 769px) {
-  .meeting-card {
-    width: calc(50% - 10px); /* Two cards per row */
+@media (max-width: 576px ){
+  .meeting-header {
+    
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    height: 30%;
+    padding: 0;
+    margin-bottom: 10px;
   }
+  .skeleton-card{
+
+    width: 100%;  
+    margin-bottom: 20px;
 }
+.meeting-card {
+  margin-bottom: 15px;
+  padding: 10px;
+  width: 100%; 
+}
+}
+
+

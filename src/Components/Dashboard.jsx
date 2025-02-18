@@ -153,12 +153,12 @@ const Dashboard = () => {
               overflow: "hidden", 
               boxShadow: collapsed ? "none" : "2px 0px 10px rgba(0, 0, 0, 0.1)",
           }}
-          onMouseEnter={() => {
-              if(window.innerWidth > 768){
-                  setCollapsed(false)
-              }
-          }}
-          onMouseLeave={() => setCollapsed(true)}
+          // onMouseEnter={() => {
+          //     if(window.innerWidth > 768){
+          //         setCollapsed(false)
+          //     }
+          // }}
+          // onMouseLeave={() => setCollapsed(true)}
         >
           <Menu mode="inline" defaultSelectedKeys={["1"]} style={{ height: "100%", borderRight: 0 }} items={menuItems} />
         </Sider>

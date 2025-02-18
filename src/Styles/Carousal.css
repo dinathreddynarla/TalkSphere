@@ -1,0 +1,75 @@
+/* Carousel container styling */
+.carousel-container {
+    
+    width: 100%;
+  margin: 0 auto;
+}
+
+/* Card styling */
+.carousel-card {
+  text-align: center;
+  background-color: transparent;
+}
+
+/* Image styling (round and centered) */
+.carousel-image {
+  border-radius: 50%; /* Makes the image rounded */
+  width: 300px; /* Default size for larger screens */
+  height: 300px; /* Default size for larger screens */
+  margin: 0 auto; /* Centers the image */
+
+}
+
+/* Heading styling */
+.carousel-heading {
+  font-size: 20px; /* Default font size for larger screens */
+}
+
+/* Responsive Styles */
+@media (max-width: 1200px) {
+  .carousel-container .slick-slide {
+    display: flex;
+    justify-content: center;
+  }
+
+  .carousel-image {
+    width: 250px; /* Resize image for medium screens */
+    height: 250px; /* Resize image for medium screens */
+  }
+
+  .carousel-heading {
+    font-size: 18px; /* Adjust heading font size */
+  }
+}
+
+@media (max-width: 768px) {
+  .carousel-container .slick-slide {
+    display: flex;
+    justify-content: center;
+  }
+
+  .carousel-image {
+    width: 200px; /* Resize image for small screens */
+    height: 200px; /* Resize image for small screens */
+  }
+
+  .carousel-heading {
+    font-size: 16px; /* Adjust heading font size */
+  }
+}
+
+@media (max-width: 576px) {
+  .carousel-container .slick-slide {
+    display: flex;
+    justify-content: center;
+  }
+
+  .carousel-image {
+    width: 150px; /* Resize image for extra small screens */
+    height: 150px; /* Resize image for extra small screens */
+  }
+
+  .carousel-heading {
+    font-size: 14px; /* Adjust heading font size */
+  }
+}

@@ -7,6 +7,7 @@ import Cookies from "js-cookie";
 import { getFreshToken } from '../services/authService';
 import '../Styles/HomePage.css';
 import { baseUrl } from '../App';
+import Carousal from './Carousal';
 
 const HomePage = () => {
   const [roomID, setRoomID] = useState("");
@@ -66,80 +67,45 @@ const HomePage = () => {
   return (
     <div className="home-page">
       <div className="home-content">
-        <Row gutter={16} align="middle" justify="center" style={{ minHeight: '80vh' }}>
-          <Col xs={24} sm={16} md={12} lg={10}>
-            <Card
-              className='instantMeet-card'
-              title="Video Calls and Meetings for Everyone"
-              bordered={false}
-              style={{
-                textAlign: "center",
-                boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)",
-                borderRadius: "10px",
-                padding: "0px",
-                marginBottom:"-17px"
-              }}
-            >
-              <p style={{ marginBottom: "20px", fontSize: "16px", fontWeight: "bold" }}>
-                Connecting Conversations, Anytime
-              </p>
+        <Row gutter={16} align="middle" justify="center" className='homerow'>
+        <Col xs={24} sm={16} md={12} lg={10}  className='instant'>
+      <Card
+        className="instantMeet-card"
+        title="Video Calls and Meetings for Everyone"
+        className="card-style"
+      >
+        <p className="card-text">Connecting Conversations, Anytime</p>
 
-              <Button
-                type="primary"
-                onClick={handleInstantMeet}
-                loading={loading}
-                icon={<VideoCameraOutlined />}
-                style={{
-                  marginBottom: "20px",
-                  width: '57%',
-                  backgroundColor: "#2D6A4F",
-                  borderColor: "#2D6A4F",
-                  color: "white",
-                  padding: "10px 20px",
-                }}
-              >
-                {loading ? "Creating Meeting..." : "Start Instant Meet"}
-              </Button>
+        <Button
+          type="primary"
+          onClick={handleInstantMeet}
+          loading={loading}
+          icon={<VideoCameraOutlined />}
+          className="primary-button"
+        >
+          {loading ? "Creating Meeting..." : "Start Instant Meet"}
+        </Button>
 
-              <Input
-                placeholder="Enter Meeting ID"
-                value={roomID}
-                onChange={handleRoomIDChange}
-                className="meeting-id-input"
-                style={{
-                  marginBottom: "20px",
-                  width: "90%",
-                  maxWidth: "400px",
-                  borderColor: "#2D6A4F",
-                  padding: "8px 15px",
-                  margin: "0 auto",
-                }}
-              />
+        <Input
+          placeholder="Enter Meeting ID"
+          value={roomID}
+          onChange={handleRoomIDChange}
+          className="meeting-id-input"
+        />
 
-              <Button
-                type="default"
-                onClick={handleJoin}
-                icon={<EnterOutlined />}
-                style={{
-                  width: "auto",
-                  backgroundColor: "#E9F5F2",
-                  color: "#2D6A4F",
-                  borderColor: "#2D6A4F",
-                  padding: "10px 20px",
-                  marginTop: "10px",
-                }}
-              >
-                Join Meeting
-              </Button>
-            </Card>
-          </Col>
-
+        <Button
+          type="default"
+          onClick={handleJoin}
+          icon={<EnterOutlined />}
+          className="join-button"
+        >
+          Join Meeting
+        </Button>
+      </Card>
+    </Col>
           <Col xs={24} sm={16} md={12} lg={10}>
             <div className="right-side" style={{ textAlign: 'center', marginTop: '20px' }}>
-              <video width="100%" controls>
-                <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" />
-                Your browser does not support the video tag.
-              </video>
+              <Carousal />
             </div>
           </Col>
         </Row>

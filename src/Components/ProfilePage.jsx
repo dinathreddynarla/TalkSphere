@@ -126,8 +126,25 @@ const ProfilePage = () => {
   };
 
   if (!user) {
-    return <Skeleton active />;
+    return (
+      <div className="profile-container">
+        <div className="profile-card">
+          <div className="profile-pic-container">
+            <Skeleton.Avatar active size="large" shape="circle" />
+            <Skeleton.Button active size="small" />
+            <Skeleton.Button active size="small" />
+          </div>
+
+          <div className="profile-right">
+            <Skeleton active />
+            <Skeleton active />
+            <Skeleton active />
+          </div>
+        </div>
+      </div>
+    );
   }
+
   const accountCreationDate = dayjs(user.createdAt).format('dddd, MMMM D, YYYY');
 
   return (

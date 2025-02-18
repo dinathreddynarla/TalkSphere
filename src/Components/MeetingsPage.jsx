@@ -1,12 +1,13 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchMeetings, addMeeting, editMeeting, deleteMeeting } from "../Redux/meetingsSlice.js";
-import { Modal, Button, Input, DatePicker, Typography, Form, Skeleton, Space, message, Spin } from 'antd';
-import { EditOutlined, DeleteOutlined, PlayCircleOutlined, ScheduleOutlined } from '@ant-design/icons';
+import { fetchMeetings, addMeeting, editMeeting, deleteMeeting } from "../Redux/meetingsSlice";
+import { Modal, Button, Input, DatePicker, Typography, Form, Skeleton, message, Card, Popover, Menu } from "antd";
+import { EditOutlined, DeleteOutlined, CheckCircleOutlined, CloseCircleOutlined, PlayCircleOutlined, ScheduleOutlined, MoreOutlined, CopyOutlined } from '@ant-design/icons';
 import Cookies from "js-cookie";
-import dayjs from "dayjs";  // Import dayjs for date handling
+import dayjs from "dayjs";
 import "../Styles/MeetingsPage.css";
+import nomeetings from "../assets/nomeetings2.png"
 
 const { Title } = Typography;
 
@@ -18,64 +19,49 @@ const MeetingsPage = () => {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
-    date: dayjs(),  // Set default value as dayjs instance
+    date: dayjs(),
   });
   const [loading, setLoading] = useState(true); // For skeleton loading
-  const [form] = Form.useForm();  // Ant Design form hook to handle form state
-  const [isRedirecting, setIsRedirecting] = useState(false); // State to handle redirecting
+  const [form] = Form.useForm();
   const navigate = useNavigate();
   const cookie = Cookies.get("session");
   const session = cookie ? JSON.parse(cookie) : null;
 
+  // Redirect to login if no session
   if (!session) {
-    navigate("/");  // Redirect to login page if no session exists
-    return;
+    navigate("/");  
+    return null;
   }
 
   useEffect(() => {
-    const isReload = sessionStorage.getItem("isReload");
-    if (isReload) {
+    if (sessionStorage.getItem("isReload")) {
       navigate("/dashboard");
       sessionStorage.removeItem("isReload");
     }
   }, [navigate]);
-  
-  useEffect(() => {
-    form.setFieldsValue(formData); // Update form values when formData changes
-  }, [formData, form]);
 
   useEffect(() => {
-    // Simulate data fetching delay
-    setTimeout(() => {
-      setLoading(false);  // Stop skeleton loading once data is fetched
-    }, 1000);
+    setTimeout(() => setLoading(false), 1000); // Simulate data fetching delay
   }, []);
 
   const handleFormSubmit = async (values) => {
-    // If editing, dispatch the update action, else create a new meeting
-    if (editingMeeting) {
-      dispatch(editMeeting({ id: editingMeeting._id, formData: values }));
-      message.success("Meeting updated successfully!");
-    } else {
-      dispatch(addMeeting(values));
-      message.success("Meeting scheduled successfully!");
-    }
-
+    const action = editingMeeting ? editMeeting : addMeeting;
+    const payload = editingMeeting ? { id: editingMeeting._id, formData: values } : values;
+    dispatch(action(payload));
+    message.success(editingMeeting ? "Meeting updated successfully!" : "Meeting scheduled successfully!");
     setShowModal(false);
     setEditingMeeting(null);
     setFormData({ title: "", description: "", date: dayjs() });
-    form.resetFields()
+    form.resetFields();
   };
-console.log(formData)
+
   const handleDelete = (id) => {
     Modal.confirm({
-      title: 'Are you sure you want to delete this meeting?',
-      okText: 'Yes',
-      cancelText: 'No',
+      title: "Are you sure you want to delete this meeting?",
       onOk: () => {
         dispatch(deleteMeeting(id));
         message.success("Meeting deleted successfully!");
-      }
+      },
     });
   };
 
@@ -84,181 +70,169 @@ console.log(formData)
     setFormData({
       title: meeting.title,
       description: meeting.description,
-      date: dayjs(meeting.date)  // Convert to dayjs instance
+      date: dayjs(meeting.date),
     });
     setShowModal(true);
   };
 
   const handleJoin = (roomID) => {
     message.success("Redirecting to the room...");
-    setIsRedirecting(true);
-    setTimeout(() => {
-      navigate(`/room/${roomID}`);
-    }, 2000);
+    setTimeout(() => navigate(`/room/${roomID}`), 2000);
   };
-  const handleCancel= ()=>{
-    setFormData({ title: "", description: "", date: dayjs() });
-    form.resetFields()
-    setShowModal(false)
-  }
+
+  const handleCopyLink = (meetingId) => {
+    const meetingLink = `https://talk-sphere-nine.vercel.app/room/${meetingId}`;
+    navigator.clipboard.writeText(meetingLink)
+      .then(() => message.success("Meeting link copied to clipboard!"))
+      .catch(() => message.error("Failed to copy the link"));
+  };
+
+  const menu = (meetingId) => (
+    <Menu>
+      <Menu.Item key="1" onClick={() => handleEdit(meetingId)}>
+        <EditOutlined /> Edit
+      </Menu.Item>
+      <Menu.Item key="2" onClick={() => handleDelete(meetingId)} danger>
+        <DeleteOutlined /> Delete
+      </Menu.Item>
+    </Menu>
+  );
+
   return (
     <div className="meetings-container">
-      <Title level={1} className="meetings-title">Meetings</Title>
-      
-      <Button
-  type="primary"
-  icon={<ScheduleOutlined />}
-  onClick={() => setShowModal(true)}
-  style={{
-    marginBottom: '20px',
-    backgroundColor: '#2D6A4F',
-    color: 'white',
-    border: 'none',
-    width: '250px',
-    fontSize:"1.2em",
-    padding: '10px',  // Applies to the entire button, including text
-    display: 'flex',  // Ensures button contents align properly
-    justifyContent: 'center',  // Centers the text horizontally
-    alignItems: 'center',  // Centers the text vertically
-  }}
->
-  Schedule a Meeting
-</Button>
+      <div className="meeting-header">
+        <Title level={1}>Meetings</Title>
+        <Button
+          type="primary"
+          icon={<ScheduleOutlined />}
+          onClick={() => setShowModal(true)}
+          style={{
+            backgroundColor: '#2D6A4F',
+            color: 'white',
+            border: 'none',
+            width: '230px',
+            fontSize: '1.2em',
+            padding: '10px',
+          }}
+        >
+          Schedule a Meeting
+        </Button>
+      </div>
 
-
-      {/* Modal for scheduling/editing meetings */}
       <Modal
         title={editingMeeting ? "Edit Meeting" : "Schedule Meeting"}
         open={showModal}
-        onCancel={handleCancel}
+        onCancel={() => setShowModal(false)}
         footer={null}
         width={600}
       >
-        <Form
-          form={form}
-          initialValues={formData}
-          onFinish={handleFormSubmit}  // Use onFinish instead of onSubmit
-        >
-          <Form.Item label="Title" name="title"  rules={[{ required: true, message: 'Please enter the title!' }]}>
+        <Form form={form} initialValues={formData} onFinish={handleFormSubmit}>
+          <Form.Item label="Title" name="title" rules={[{ required: true, message: "Please enter the title!" }]}>
             <Input />
           </Form.Item>
-
           <Form.Item label="Description" name="description">
             <Input.TextArea />
           </Form.Item>
-
-          <Form.Item label="Date & Time" name="date" rules={[{ required: true, message: 'Please select a date and time!' }]}>
+          <Form.Item label="Date & Time" name="date" rules={[{ required: true, message: "Please select a date and time!" }]}>
             <DatePicker
               showTime
               format="YYYY-MM-DD HH:mm"
               style={{ width: '100%' }}
-              value={formData.date}  // Ensure it's a dayjs instance
-              onChange={(date) => setFormData({ ...formData, date })}  // Update date using dayjs
+              value={formData.date}
+              onChange={(date) => setFormData({ ...formData, date })}
             />
           </Form.Item>
-
           <div className="modal-buttons" style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <Button onClick={handleCancel} style={{ width: '48%', backgroundColor: '#f5f5f5', color: '#2D6A4F', border: 'none' }}>
-              Cancel
-            </Button>
-            <Button
-              type="primary"
-              htmlType="submit"
-              style={{
-                width: '48%',
-                backgroundColor: '#2D6A4F',
-                color: 'white',
-                border: 'none'
-              }}
-            >
+            <Button onClick={() => setShowModal(false)} style={{ width: '48%' }}>Cancel</Button>
+            <Button type="primary" htmlType="submit" style={{ width: '48%' }}>
               {editingMeeting ? "Update" : "Schedule"}
             </Button>
           </div>
         </Form>
       </Modal>
 
-      {/* Render Meetings List */}
       <div className="meetings-list">
         {loading ? (
-          <Skeleton active paragraph={{ rows: 1 }} />
+          Array(4).fill(null).map((_, index) => (
+            <Card key={index} className="skeleton-card">
+              <Skeleton loading active paragraph={{ rows: 4 }} />
+            </Card>
+          ))
         ) : meetings.length === 0 ? (
-          <p>No meetings scheduled.</p>
+          <div className="no-meetings">
+            <img src={nomeetings} alt="no meetings scheduled" />
+            <h1>No meetings Scheduled</h1>
+          </div>
+          
         ) : (
           meetings.map((meeting) => (
             <div key={meeting._id} className="meeting-card">
-              <Title level={3} className="meeting-title">{meeting.title}</Title>
+              <div className="meeting-card-header">
+                <Title level={3}>{meeting.title}</Title>
+                <Popover content={menu(meeting._id)} trigger="click" placement="bottomRight">
+                  <Button icon={<MoreOutlined />} style={{ fontSize: '16px' }} />
+                </Popover>
+              </div>
+              <p>{dayjs(meeting.date).format("dddd, D MMMM, hh:mm A")}</p>
+              <p className="meeting-status">
+                {meeting.isActive ? (
+                   <span>
+                   <CheckCircleOutlined style={{ color: 'green', marginRight: '5px' }} />
+                   Active
+                 </span>
+                ) : (
+                  <span>
+              <CloseCircleOutlined style={{ color: 'red', marginRight: '5px' }} />
+              Not Active
+            </span>
+                )}
+              </p>
               <p>{meeting.description}</p>
-              <p><strong>Date:</strong> {dayjs(meeting.date).format("YYYY-MM-DD HH:mm")}</p>
-              <div className="meeting-actions" style={{ display: 'flex', justifyContent: 'center' , gap:"10px" }}>
-              <Button
-  type="primary"
-  icon={<PlayCircleOutlined />}
-  onClick={() => handleJoin(meeting._id)}
-  style={{
-    backgroundColor: '#2D6A4F',
-    color: 'white',
-    border: 'none',
-    width: '120px',
-    transition: 'background-color 0.3s, color 0.3s',  // Smooth transition for both background and color
-  }}
-  onMouseEnter={(e) => {
-    e.target.style.backgroundColor = '#1E4A3B';  // Darker shade on hover
-    e.target.style.color = 'white';  // Text color remains white for readability
-  }}
-  onMouseLeave={(e) => {
-    e.target.style.backgroundColor = '#2D6A4F';  // Original color
-    e.target.style.color = 'white';  // Text color remains white
-  }}
->
-  Start
-</Button>
-
-<Button
-  icon={<EditOutlined />}
-  onClick={() => handleEdit(meeting)}
-  style={{
-    backgroundColor: '#f5f5f5',
-    color: '#2D6A4F',
-    border: 'none',
-    width: '120px',
-    transition: 'background-color 0.3s, color 0.3s',  // Smooth transition for both background and color
-  }}
-  onMouseEnter={(e) => {
-    e.target.style.backgroundColor = '#e0e0e0';  // Slight darkening on hover
-    e.target.style.color = '#2D6A4F';  // Text remains dark green
-  }}
-  onMouseLeave={(e) => {
-    e.target.style.backgroundColor = '#f5f5f5';  // Original color
-    e.target.style.color = '#2D6A4F';  // Text remains dark green
-  }}
->
-  Edit
-</Button>
-
-<Button
-  type="danger"
-  icon={<DeleteOutlined />}
-  onClick={() => handleDelete(meeting._id)}
-  style={{
-    backgroundColor: '#f5f5f5',
-    color: '#2D6A4F',
-    border: 'none',
-    width: '120px',
-    transition: 'background-color 0.3s, color 0.3s',  // Smooth transition for both background and color
-  }}
-  onMouseEnter={(e) => {
-    e.target.style.backgroundColor = '#ff4d4f';  // Red on hover
-    e.target.style.color = 'white';  // White text for contrast
-  }}
-  onMouseLeave={(e) => {
-    e.target.style.backgroundColor = '#f5f5f5';  // Original color
-    e.target.style.color = '#2D6A4F';  // Dark green text for readability
-  }}
->
-  Delete
-</Button>
-
-
+              <div className="meeting-actions">
+                <Button
+                  type="primary"
+                  icon={<PlayCircleOutlined />}
+                  onClick={() => handleJoin(meeting._id)}
+                  style={{
+                    backgroundColor: '#2D6A4F',
+                    color: 'white',
+                    border: 'none',
+                    width: '120px',
+                    transition: 'background-color 0.3s, color 0.3s',  // Smooth transition for both background and color
+                  }}
+                  onMouseEnter={(e) => {
+                    e.target.style.backgroundColor = '#1E4A3B';  // Darker shade on hover
+                    e.target.style.color = 'white';  // Text color remains white for readability
+                  }}
+                  onMouseLeave={(e) => {
+                    e.target.style.backgroundColor = '#2D6A4F';  // Original color
+                    e.target.style.color = 'white';  // Text color remains white
+                  }}
+                >
+                  Start
+                </Button>
+                <Button
+                  type="primary"
+                  icon={<CopyOutlined />}
+                  onClick={() => handleCopyLink(meeting._id)}
+                  style={{
+                    backgroundColor: '#f5f5f5',
+                    color: '#2D6A4F',
+                    border: 'none',
+                    width: '120px',
+                    transition: 'background-color 0.3s, color 0.3s',  // Smooth transition for both background and color
+                  }}
+                  onMouseEnter={(e) => {
+                    e.target.style.backgroundColor = '#e0e0e0';  // Slight darkening on hover
+                    e.target.style.color = '#2D6A4F';  // Text remains dark green
+                  }}
+                  onMouseLeave={(e) => {
+                    e.target.style.backgroundColor = '#f5f5f5';  // Original color
+                    e.target.style.color = '#2D6A4F';  // Text remains dark green
+                  }}
+                >
+                  Copy Link
+                </Button>
               </div>
             </div>
           ))
