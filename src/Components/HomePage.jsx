@@ -66,17 +66,18 @@ const HomePage = () => {
   return (
     <div className="home-page">
       <div className="home-content">
-        <Row gutter={16} align="middle" justify="center" style={{ minHeight: '100vh' }}>
-          <Col xs={24} sm={16} md={12} lg={8}>
+        <Row gutter={16} align="middle" justify="center" style={{ minHeight: '80vh' }}>
+          <Col xs={24} sm={16} md={12} lg={10}>
             <Card
+              className='instantMeet-card'
               title="Video Calls and Meetings for Everyone"
               bordered={false}
               style={{
                 textAlign: "center",
                 boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)",
                 borderRadius: "10px",
-                padding: "20px",
-                margin:"0px"
+                padding: "0px",
+                marginBottom:"-17px"
               }}
             >
               <p style={{ marginBottom: "20px", fontSize: "16px", fontWeight: "bold" }}>
@@ -90,7 +91,7 @@ const HomePage = () => {
                 icon={<VideoCameraOutlined />}
                 style={{
                   marginBottom: "20px",
-                  width: "auto",
+                  width: '57%',
                   backgroundColor: "#2D6A4F",
                   borderColor: "#2D6A4F",
                   color: "white",
@@ -107,7 +108,7 @@ const HomePage = () => {
                 className="meeting-id-input"
                 style={{
                   marginBottom: "20px",
-                  width: "50%",
+                  width: "90%",
                   maxWidth: "400px",
                   borderColor: "#2D6A4F",
                   padding: "8px 15px",
@@ -133,7 +134,7 @@ const HomePage = () => {
             </Card>
           </Col>
 
-          <Col xs={24} sm={16} md={12} lg={8}>
+          <Col xs={24} sm={16} md={12} lg={10}>
             <div className="right-side" style={{ textAlign: 'center', marginTop: '20px' }}>
               <video width="100%" controls>
                 <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" />

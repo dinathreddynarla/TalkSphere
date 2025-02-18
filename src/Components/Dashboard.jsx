@@ -25,7 +25,7 @@ const Dashboard = () => {
   const user = useSelector((state) => state.user.user);
   const status = useSelector((state) => state.user.status);
   const error = useSelector((state) => state.user.error);
-  const [collapsed, setCollapsed] = useState(window.innerWidth <= 768);
+  const [collapsed, setCollapsed] = useState(true);
   const [isHovered, setIsHovered] = useState(false);
   
 
@@ -143,7 +143,7 @@ const Dashboard = () => {
             width={200}
             collapsible
             collapsed={collapsed}
-            collapsedWidth={window.innerWidth > 768 ? 0 : 50}
+            collapsedWidth={50}
             trigger={null} 
             style={{
               backgroundColor: "#E9F5F2",
@@ -153,12 +153,18 @@ const Dashboard = () => {
               overflow: "hidden", 
               boxShadow: collapsed ? "none" : "2px 0px 10px rgba(0, 0, 0, 0.1)",
           }}
+          onMouseEnter={() => {
+              if(window.innerWidth > 768){
+                  setCollapsed(false)
+              }
+          }}
+          onMouseLeave={() => setCollapsed(true)}
         >
           <Menu mode="inline" defaultSelectedKeys={["1"]} style={{ height: "100%", borderRight: 0 }} items={menuItems} />
         </Sider>
 
         {/* Main Content with Loader */}
-        <Layout style={{ padding: "10px", width: "80%" }}>
+        <Layout style={{ padding: "10px", width: "90%" }}>
           <Content
             style={{
               padding: 24,

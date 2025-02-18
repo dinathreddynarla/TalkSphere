@@ -28,9 +28,13 @@ body {
   scrollbar-width: none;
   scroll-behavior: smooth;
 }
-:where(.css-dev-only-do-not-override-xex5fb).ant-card .ant-card-body {
-  padding: 65px;
+
+.auth-card .ant-card-body {
+
+  padding: 55px;
 }
+/* .ant-card .ant-card-body {
+} */
 
 /* Content Layout */
 .content-container {
@@ -168,9 +172,11 @@ body {
   .auth-card {
       width: 90%;
   }
-  :where(.css-dev-only-do-not-override-xex5fb).ant-card .ant-card-body {
+  .auth-card .ant-card-body {
+
     padding: 45px;
   }
+  
 
 }
 
@@ -184,9 +190,10 @@ body {
   .input-field {
       font-size: 14px;
   }
-  :where(.css-dev-only-do-not-override-xex5fb).ant-card .ant-card-body {
-    padding: 15px;
-  }
+  .auth-card .ant-card-body {
+
+  padding: 20px;
+}
   .content-container{
     margin-top: 40px;
   margin-bottom: 10px;
