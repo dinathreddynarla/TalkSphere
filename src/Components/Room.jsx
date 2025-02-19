@@ -202,6 +202,7 @@ const startMeetByHost = async () => {
           height: '100vh',
           backgroundColor: '#E9F5F2',
           width: '100vw'
+
         }}
       >
         <div className="loader"></div>
@@ -216,6 +217,7 @@ const startMeetByHost = async () => {
           justifyContent: 'center',
           alignItems: 'center',
           height: '100vh',
+          width:'100vw',
           backgroundColor: '#E9F5F2',
           color: '#2D6A4F',
           textAlign: 'center',
@@ -255,6 +257,7 @@ const startMeetByHost = async () => {
           justifyContent: 'center',
           alignItems: 'center',
           height: '100vh',
+          width:'100vw',
           backgroundColor: '#E9F5F2',
           color: '#2D6A4F',
           textAlign: 'center',
