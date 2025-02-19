@@ -94,7 +94,7 @@ const startMeetByHost = async () => {
     });
 
     const data = await response.json();
-    // console.log(data);
+     console.log(data);
   } catch (error) {
     console.error("Error fetching meetings:", error);
   }
@@ -133,8 +133,12 @@ const startMeetByHost = async () => {
     const myMeeting = async () => {
       if (!user || !meeting) return;
       let isHost = user.uid == meeting.host ? true : false;
-      if(isHost && !hasStartedMeeting){
+      console.log(isHost , meeting.isActive);
+      
+      if(isHost && !meeting.isActive){
        hasStartedMeeting.current = true
+       console.log("hello");
+       
         await startMeetByHost()
       }
       if (!isHost) {
