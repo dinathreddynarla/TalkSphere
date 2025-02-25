@@ -1,10 +1,14 @@
 /* Carousel container styling */
 .carousel-container {
-    
+    /* border: 2px solid; */
     width: 100%;
+    margin-top: -30px;
   margin: 0 auto;
 }
-
+.carousel-container .slick-slide {
+  display: flex;
+  justify-content: center;
+}
 /* Card styling */
 .carousel-card {
   text-align: center;
@@ -25,29 +29,16 @@
   font-size: 20px; /* Default font size for larger screens */
 }
 
-/* Responsive Styles */
-@media (max-width: 1200px) {
-  .carousel-container .slick-slide {
-    display: flex;
-    justify-content: center;
-  }
 
-  .carousel-image {
-    width: 250px; /* Resize image for medium screens */
-    height: 250px; /* Resize image for medium screens */
-  }
-
-  .carousel-heading {
-    font-size: 18px; /* Adjust heading font size */
-  }
-}
 
 @media (max-width: 768px) {
   .carousel-container .slick-slide {
     display: flex;
     justify-content: center;
   }
-
+  .carousel-container{
+    margin-top:0;
+  }
   .carousel-image {
     width: 200px; /* Resize image for small screens */
     height: 200px; /* Resize image for small screens */
@@ -65,8 +56,9 @@
   }
 
   .carousel-image {
-    width: 150px; /* Resize image for extra small screens */
-    height: 150px; /* Resize image for extra small screens */
+    width: 180px; /* Resize image for extra small screens */
+    height: 180px; /* Resize image for extra small screens */
+    margin-bottom: 20px;
   }
 
   .carousel-heading {

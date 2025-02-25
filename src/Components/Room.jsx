@@ -3,13 +3,17 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { ZegoUIKitPrebuilt } from '@zegocloud/zego-uikit-prebuilt';
 import { APP_ID, SERVER_SECRET } from './constants';
 import axios from 'axios';
+import { Layout , Typography } from 'antd';
 import { useState, useEffect, useRef } from 'react';
 import Cookies from 'js-cookie';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchUserProfile } from '../Redux/userSlice';
 import "../Styles/Room.css"
 import { baseUrl } from '../App';
+import logo from '../assets/favicon2.png';
 
+const {Header} = Layout;
+const {Title} = Typography;
 const Room = () => {
   const { roomID } = useParams();
   const navigate = useNavigate();
@@ -131,6 +135,9 @@ const startMeetByHost = async () => {
   // Join room using ZEGOCLOUD
   useEffect(() => {
     const myMeeting = async () => {
+      let layout = window.innerHeight > 576
+      console.log(layout);
+      
       if (!user || !meeting) return;
       let isHost = user.uid == meeting.host ? true : false;
       console.log(isHost , meeting.isActive);
@@ -142,6 +149,7 @@ const startMeetByHost = async () => {
         await startMeetByHost()
       }
       if (!isHost) {
+        
         let userEmail = user.email ?? 'anonymususer@gmail.com';
         let meetID = roomID;
        let message =  await joinMeet(userEmail, meetID)
@@ -180,6 +188,17 @@ const startMeetByHost = async () => {
           scenario: {
             mode: ZegoUIKitPrebuilt.GroupCall,
           },
+          showPreJoinView: true, // Show the pre-join screen
+          preJoinViewConfig: {
+            title: "Join the Meeting", // Custom title for the pre-join screen
+          },
+          layout:"Grid",
+          showLayoutButton: layout,
+          turnOnMicrophoneWhenJoining: false, // Disable mic by default
+          turnOnCameraWhenJoining: true, // Enable camera by default
+          useFrontFacingCamera: true, // Use front-facing camera
+          videoResolutionDefault: "720p", // Set default video resolution
+          enableStereo: true, // Enable stereo sound
           showTurnOffRemoteCameraButton: isHost,
           showTurnOffRemoteMicrophoneButton: isHost,
           showRemoveUserButton: isHost,
@@ -287,10 +306,26 @@ const startMeetByHost = async () => {
     );
   }
   return (
+    <div className='room-container' border="2px solid black">
+    {window.innerWidth <576 && (
+      <Header style={{ backgroundColor: "#2D6A4F",width:"100%" , padding: "0 20px", display: "flex",height:"10vh", alignItems: "center" ,justifyContent: "center" , height:"10%"}}>
+                {/* Logo and Brand Name */}
+                <div style={{ display: "flex", alignItems: "center" }}>
+                  <img
+                    src={logo}
+                    alt="TalkSphere Logo"
+                    style={{ width: 40, height: 40, marginRight: 15 , alignSelf:'center'   }}
+                  />
+                  <Title level={3} style={{ color: "#fff", margin: 0, textAlign: "center",marginRight: 9 }}>TalkSphere</Title>
+                  </div>
+      </Header >
+
+    )}
     <div
       className="myCallContainer"
-      style={{ width: '100vw', height: '100vh' }}
+      
     ></div>
+    </div>
   );
 };
 

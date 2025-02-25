@@ -18,8 +18,9 @@ const Carousal = () => {
           <Card
             hoverable
             className="carousel-card"
-            cover={<img alt="card1" src={meetnew} className="carousel-image" style={imageStyle} />}
+            
           >
+            <img alt="card1" src={meetnew} className="carousel-image" style={imageStyle} />
             <h2 className="carousel-heading">Connect with People from Anywhere</h2>
           </Card>
         </div>
@@ -27,8 +28,8 @@ const Carousal = () => {
           <Card
             hoverable
             className="carousel-card"
-            cover={<img alt="card2" src={meetnew2} className="carousel-image" style={imageStyle} />}
           >
+            <img alt="card2" src={meetnew2} className="carousel-image" style={imageStyle} />
             <h2 className="carousel-heading">Schedule your meetings</h2>
           </Card>
         </div>
@@ -36,8 +37,8 @@ const Carousal = () => {
           <Card
             hoverable
             className="carousel-card"
-            cover={<img alt="card3" src={meetnew3} className="carousel-image" style={imageStyle}/>}
           >
+            <img alt="card3" src={meetnew3} className="carousel-image" style={imageStyle}/>
             <h2 className="carousel-heading">Get a new link for a meeting</h2>
           </Card>
         </div>

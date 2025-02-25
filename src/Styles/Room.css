@@ -1,4 +1,18 @@
 /* Loader styles */
+.room-container{
+  width: 100%;
+  height: 100%;
+}
+.myCallContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+  width: 100%;
+  height: 100%;
+
+}
+
 .loader {
     margin: auto;
     width: 20px;
@@ -28,6 +42,14 @@
   @keyframes l2 {
     100% {
       box-shadow: 0 0 0 40px #E9F5F2; /* Light greenish background color */
+    }
+  }
+
+  @media (max-width: 576px) {
+    .myCallContainer{
+     display: flex;
+     align-items: center;
+     justify-content: center;
     }
   }
   

@@ -66,22 +66,18 @@ const HomePage = () => {
 
   return (
     <div className="home-page">
-      <div className="home-content">
+      {/* <div className="home-content"> */}
         <Row gutter={16} align="middle" justify="center" className='homerow'>
         <Col xs={24} sm={16} md={12} lg={8}  className='instant'>
       <Card
         className="instantMeet-card"
-        title={window.innerWidth > 576 ? "Video Calls and Meetings for Everyone" : ""}
-        styles={{
-          header: {
-            color: "black",
-            fontWeight: "bold",
-            textAlign: "center",
-          },
-        }}
       >
-        
-       { window.innerWidth < 576 && (<p className="card-text">Connecting Conversations, Anytime</p>) }
+       
+      
+       
+       <p className='card-head'>Video Calls and meetings for everyone</p>
+        <p className="card-text">Connect , Collaborate and Celebrate from anywhere with TalkSphere</p>
+     
       
         
 
@@ -108,18 +104,18 @@ const HomePage = () => {
           icon={<EnterOutlined />}
           className="join-button"
         >
-          Join Meeting
+          Join
         </Button>
       </Card>
     </Col>
           <Col xs={24} sm={16} md={12} lg={10}>
-            <div className="right-side" style={{ textAlign: 'center', marginTop: '20px' }}>
+            <div className="right-side" style={{ textAlign: 'center', marginTop: '20px', height:"50%" }}>
               <Carousal />
             </div>
           </Col>
         </Row>
       </div>
-    </div>
+    // </div>
   );
 };
 
