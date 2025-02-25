@@ -68,13 +68,22 @@ const HomePage = () => {
     <div className="home-page">
       <div className="home-content">
         <Row gutter={16} align="middle" justify="center" className='homerow'>
-        <Col xs={24} sm={16} md={12} lg={10}  className='instant'>
+        <Col xs={24} sm={16} md={12} lg={8}  className='instant'>
       <Card
         className="instantMeet-card"
-        title="Video Calls and Meetings for Everyone"
-        
+        title={window.innerWidth > 576 ? "Video Calls and Meetings for Everyone" : ""}
+        styles={{
+          header: {
+            color: "black",
+            fontWeight: "bold",
+            textAlign: "center",
+          },
+        }}
       >
-        <p className="card-text">Connecting Conversations, Anytime</p>
+        
+       { window.innerWidth < 576 && (<p className="card-text">Connecting Conversations, Anytime</p>) }
+      
+        
 
         <Button
           type="primary"

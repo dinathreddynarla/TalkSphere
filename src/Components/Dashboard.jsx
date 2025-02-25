@@ -93,7 +93,7 @@ const Dashboard = () => {
   ];
 
   return (
-    <Layout style={{ height: "100vh", backgroundColor: "#f5f5f5", width:"100vw" }}>
+    <Layout style={{ height: "100vh", backgroundColor: "#f5f5f5", width:"100vw" }} className="dashboard">
       {/* Header */}
       <Header style={{ backgroundColor: "#2D6A4F", padding: "0 20px", display: "flex", alignItems: "center" }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" , width:"100%" }}>
@@ -160,7 +160,7 @@ const Dashboard = () => {
           // }}
           // onMouseLeave={() => setCollapsed(true)}
         >
-          <Menu mode="inline" defaultSelectedKeys={["1"]} style={{ height: "100%", borderRight: 0 }} items={menuItems} />
+          <Menu mode="inline" defaultSelectedKeys={["1"]} style={{ height: "100vh", borderRight: 0 }} items={menuItems} />
         </Sider>
 
         {/* Main Content with Loader */}
