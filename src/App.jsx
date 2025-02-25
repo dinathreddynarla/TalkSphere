@@ -12,15 +12,18 @@ export const baseUrl = "https://talksphere-nyay.onrender.com"
 const App = () => {
     return (
 
-            <Routes>
-                <Route path="/"  element={<LandingPage />} />
-                <Route path="/dashboard/*" element={
-                   <Protected> <Dashboard /> </Protected>
-                   }/>
-                <Route path="/room/:roomID" element={<Room />} />
-                 {/* Catch-all route for any undefined path */}
-                <Route path="*" element={<NotFound />} />
-            </Routes>    
+        <div style={{ height: "100%", width: "100%", minHeight:"100%", minWidth:"100%", display: "flex" , overflow:"hidden"  }}>
+        <Routes>
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/dashboard/*" element={
+                <Protected>
+                    <Dashboard />
+                </Protected>
+            }/>
+            <Route path="/room/:roomID" element={<Room />} />
+            <Route path="*" element={<NotFound />} />
+        </Routes>    
+    </div>
     );
 };
 

@@ -93,10 +93,9 @@ const Dashboard = () => {
   ];
 
   return (
-    <Layout style={{ height: "100vh", backgroundColor: "#f5f5f5", width:"100vw" }} className="dashboard">
+    <Layout className="dashboard">
       {/* Header */}
-      <Header style={{ backgroundColor: "#2D6A4F", padding: "0 20px", display: "flex", alignItems: "center" }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" , width:"100%" }}>
+      <Header style={{ backgroundColor: "#2D6A4F",width:"100%" , padding: "0 20px", display: "flex", alignItems: "center" ,justifyContent: "space-between" , height:"10%" }}>
           {/* Logo and Brand Name */}
           <div style={{ display: "flex", alignItems: "center" }}>
             <img
@@ -134,21 +133,21 @@ const Dashboard = () => {
       {isHovered ? <ExportOutlined style={{ fontSize: "20px" }} /> : <LogoutOutlined style={{ fontSize: "20px" }} />}
       {window.innerWidth > 768 ? "Logout" : ""}
     </Button>
-        </div>
       </Header>
 
-      <Layout style={{ flexDirection: "row" }}>
+      <Layout style={{ flexDirection: "row" , height:"90%" , overflow:"hidden", width:"100%" }}>
         {/* Sidebar */}
         <Sider
-            width={200}
+            width={"10%"}
             collapsible
             collapsed={collapsed}
-            collapsedWidth={50}
+            collapsedWidth={window.innerWidth > 576 ? 50 :"12%"}
             trigger={null} 
             style={{
+              boxSizing:"border-box",
               backgroundColor: "#E9F5F2",
-              padding: "10px",
-              height: "100vh",
+              padding: "5px",
+              height: "100%",
               transition: "all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1)",
               overflow: "hidden", 
               boxShadow: collapsed ? "none" : "2px 0px 10px rgba(0, 0, 0, 0.1)",
@@ -160,20 +159,22 @@ const Dashboard = () => {
           // }}
           // onMouseLeave={() => setCollapsed(true)}
         >
-          <Menu mode="inline" defaultSelectedKeys={["1"]} style={{ height: "100vh", borderRight: 0 }} items={menuItems} />
+          <Menu mode="inline" defaultSelectedKeys={["1"]} style={{ height: "100%", borderRight: 0 }} items={menuItems} />
         </Sider>
-
+    
         {/* Main Content with Loader */}
-        <Layout style={{ padding: "10px", width: "90%" }}>
+        <Layout style={{ padding: "10px", width: "90%" , height:"100%" , boxSizing:"border-box"}}>
           <Content
             style={{
+              border:"2px solid red",
               padding: 24,
               margin: 0,
-              minHeight: "90vh",
+              height: "100%",
               backgroundColor: "#fff",
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
+             
             }}
           >
             {status === "loading" ? (
