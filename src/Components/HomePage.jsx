@@ -13,7 +13,7 @@ const HomePage = () => {
   const [roomID, setRoomID] = useState("");
   const [meetingData, setMeetingData] = useState({
     title: 'Instant Meet',
-    description: `Instant Meet - ${new Date().toISOString()}`,
+    description: `Instant Meet - ${new Date().toISOString().slice(0,5)}`,
     date: new Date()
   });
   const [loading, setLoading] = useState(false);
