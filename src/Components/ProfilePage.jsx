@@ -162,7 +162,7 @@ const ProfilePage = () => {
               Update Profile Pic
             </Button>
             <Button type="default" onClick={showPasswordResetConfirmation} className="change-password-btn">
-              <FaLock /> Change Password
+              <FaLock /> Reset Password
             </Button>
           </div>
         </div>

@@ -166,7 +166,7 @@ const Dashboard = () => {
         <Layout style={{ padding: "10px", width: "90%" , height:"100%" , boxSizing:"border-box"}}>
           <Content
             style={{
-              border:"2px solid red",
+             
               padding: 24,
               margin: 0,
               height: "100%",

@@ -68,7 +68,7 @@
 .update-pic-btn,
 .change-password-btn {
   padding: 10px;
-  width: 80%;
+  width: 90%;
   background-color: #2D6A4F !important;
   color: white !important;
   border: none;
@@ -76,7 +76,7 @@
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  font-size: 13px;
+  font-size: 16px;
 
 }
 
@@ -181,8 +181,8 @@
 
   .update-pic-btn,
   .change-password-btn {
-    padding: 8px;
-    font-size: 12px;
+    padding: 10px;
+    font-size: 18px;
   }
 
   .profile-card h1 {
@@ -219,8 +219,8 @@
 
   .update-pic-btn,
   .change-password-btn {
-    padding: 2px;
-    font-size: 12px;
+    padding: 8px;
+    font-size: 16px;
     width: 90%;
   }
 
