@@ -307,20 +307,8 @@ const startMeetByHost = async () => {
   }
   return (
     <div className='room-container' border="2px solid black">
-    {window.innerWidth <576 && (
-      <Header style={{ backgroundColor: "#2D6A4F",width:"100%" , padding: "0 20px", display: "flex",height:"10vh", alignItems: "center" ,justifyContent: "center" , height:"10%"}}>
-                {/* Logo and Brand Name */}
-                <div style={{ display: "flex", alignItems: "center" }}>
-                  <img
-                    src={logo}
-                    alt="TalkSphere Logo"
-                    style={{ width: 40, height: 40, marginRight: 15 , alignSelf:'center'   }}
-                  />
-                  <Title level={3} style={{ color: "#fff", margin: 0, textAlign: "center",marginRight: 9 }}>TalkSphere</Title>
-                  </div>
-      </Header >
-
-    )}
+   
+   
     <div
       className="myCallContainer"
       
