@@ -13,7 +13,7 @@ const HomePage = () => {
   const [roomID, setRoomID] = useState("");
   const [meetingData, setMeetingData] = useState({
     title: 'Instant Meet',
-    description: `Instant Meet - ${new Date().toISOString().slice(0,5)}`,
+    description: `Instant Meet - ${new Date().toISOString().slice(6,11)}`,
     date: new Date()
   });
   const [loading, setLoading] = useState(false);
@@ -72,15 +72,8 @@ const HomePage = () => {
       <Card
         className="instantMeet-card"
       >
-       
-      
-       
        <p className='card-head'>Video Calls and meetings for everyone</p>
-        <p className="card-text">Connect , Collaborate and Celebrate from anywhere with TalkSphere</p>
-     
-      
-        
-
+        <p className="card-text">Connect, Collaborate and Celebrate from anywhere with TalkSphere</p>
         <Button
           type="primary"
           onClick={handleInstantMeet}

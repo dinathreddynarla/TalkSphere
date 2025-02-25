@@ -41,12 +41,10 @@
     padding: 0px;
   } */
   .instantMeet-card .ant-card-body{
-    padding: 20px;
-    padding-top: 0px;
-    padding-bottom: 15px;
-    
+   padding: 1rem; 
   
   }
+  
   @media (max-width: 900px) {
     .home-page{
       overflow: scroll;
@@ -79,13 +77,17 @@
 .card-head {
   font-size: 32px;
   font-weight: bold;
-  text-align:start;
-
+  font-family: math;
+  margin: 0;
 }
 /* Text styling */
 .card-text {
-  text-align: start;
+  margin: 0;
   font-size: 20px;
+}
+
+.card-head, .card-text {
+  margin: 0.25rem ;
 }
 
 /* Button styling for primary button */
