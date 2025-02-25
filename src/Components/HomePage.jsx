@@ -10,10 +10,18 @@ import { baseUrl } from '../App';
 import Carousal from './Carousal';
 
 const HomePage = () => {
+  const date = new Date();
+  const options = { weekday: 'long', month: 'short' };
+  const formattedDate = date.toLocaleDateString('en-US', options)
+    .split(' ')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
   const [roomID, setRoomID] = useState("");
   const [meetingData, setMeetingData] = useState({
     title: 'Instant Meet',
-    description: `Instant Meet - ${new Date().toISOString().slice(6,11)}`,
+    description: `Instant Meet - ${formattedDate
+      
+    }`,
     date: new Date()
   });
   const [loading, setLoading] = useState(false);
@@ -63,6 +71,8 @@ const HomePage = () => {
   window.addEventListener("beforeunload", () => {
     sessionStorage.setItem("isReload", "true");
   });
+
+ 
 
   return (
     <div className="home-page">
