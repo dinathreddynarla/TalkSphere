@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { EditOutlined, LockOutlined } from "@ant-design/icons";
 import { updateUserProfile } from "../Redux/userSlice";
 import { FaEdit, FaCheck, FaLock, FaUserAlt, FaPhone, FaBirthdayCake, FaGenderless, FaLinkedin, FaGithub } from "react-icons/fa";
 import { Skeleton, Input, Button, message, Modal ,Select, DatePicker } from "antd";
@@ -87,17 +88,18 @@ const ProfilePage = () => {
   const handleUpdate = async (field) => {
     const originalValue = user[field];
     const updatedValue = editedValues[field] || originalValue;
+    const messagefield = field == "dob" ? "Date of Birth" : field
     
     if (updatedValue !== originalValue) {
       try {
         await dispatch(updateUserProfile({ [field]: updatedValue }));
-        message.success(`${field} updated successfully!`);
+        message.success(`${messagefield} updated successfully!`);
         setEditMode((prev) => ({ ...prev, [field]: false }));
       } catch (err) {
-        message.error(`Failed to update ${field}`);
+        message.error(`Failed to update ${messagefield}`);
       }
     } else {
-      message.info(`No changes made for ${field}`);
+      message.info(`No changes made for ${messagefield}`);
       setEditMode((prev) => ({ ...prev, [field]: false }));
     }
   };
@@ -150,32 +152,31 @@ const ProfilePage = () => {
   return (
     <div className="profile-container">
       <div className="profile-card">
-        <div className="profile-pic-container">
-          <img
-            src={profilePic}
-            alt="Profile"
-            className="profile-pic"
-            onError={() => setProfilePic(defaultProfilePic)}
-          />
-          <div className="buttons">
-            <Button type="primary" onClick={handleProfilePicUpdate} className="update-pic-btn">
-              Update Profile Pic
-            </Button>
-            <Button type="default" onClick={showPasswordResetConfirmation} className="change-password-btn">
-              <FaLock /> Reset Password
-            </Button>
-          </div>
+      <div className="profile-pic-container">
+      <div className="profile-pic-wrapper">
+        <img
+          src={profilePic}
+          alt="Profile"
+          className="profile-pic"
+          onError={() => setProfilePic(defaultProfilePic)}
+        />
+        <button className="edit-icon-btn" onClick={handleProfilePicUpdate}>
+          <EditOutlined />
+        </button>
+      </div>
+      <h1>{user.name || "Guest User"}</h1>
+      
+
         </div>
 
         <div className="profile-right">
-          <h1>{user.name || "Guest User"}</h1>
+          
           {status === "loading" && <p>Updating profile...</p>}
           {error && <p className="error">{error}</p>}
 
           <div className="profile-details">
             <div className="info-section">
               <h3>Personal Info</h3>
-
               <p>
                 <FaUserAlt /> Name:{" "}
                 {editMode.name ? (
@@ -183,6 +184,7 @@ const ProfilePage = () => {
                     ref={nameRef}
                     defaultValue={user.name}
                     onChange={(e) => handleChange("name", e.target.value)}
+                    onKeyDown={(e) => e.key === "Enter" && handleUpdate("name")}
                     style={{ width: "70%" }}
                   />
                 ) : (
@@ -202,6 +204,8 @@ const ProfilePage = () => {
                     ref={genderRef}
                     defaultValue={user.gender || "Prefer not to say"}
                     onChange={(value) => handleChange("gender", value)}
+                    onKeyDown={(e) => e.key === "Enter" && handleUpdate("gender")}
+
                     style={{ width: "70%" }}
                   >
                     <Select.Option value="Male">Male</Select.Option>
@@ -226,6 +230,8 @@ const ProfilePage = () => {
                     defaultValue={user.dob ? dayjs(user.dob, "YYYY-MM-DD") : null}
                     format="YYYY-MM-DD"
                     onChange={(date, dateString) => handleChange("dob", dateString)}
+                    onKeyDown={(e) => e.key === "Enter" && handleUpdate("dob")}
+                    disabledDate={(current) => current && current > dayjs().startOf("day")}
                     style={{ width: "70%" }}
                   />
                 ) : (
@@ -237,6 +243,9 @@ const ProfilePage = () => {
                   onClick={() => editMode.dob ? handleUpdate("dob") : handleEditToggle("dob")}
                 />
               </p>
+              <Button type="default" onClick={showPasswordResetConfirmation} className="change-password-btn">
+        <LockOutlined /> Reset Password
+      </Button>
             </div>
 
             <div className="info-section">
@@ -249,6 +258,8 @@ const ProfilePage = () => {
                     ref={phoneRef}
                     defaultValue={user.phone}
                     onChange={(e) => handleChange("phone", e.target.value)}
+                    onKeyDown={(e) => e.key === "Enter" && handleUpdate("phone")}
+
                     style={{ width: "70%" }}
                   />
                 ) : (
@@ -274,6 +285,8 @@ const ProfilePage = () => {
                     ref={linkedinRef}
                     defaultValue={user.linkedin}
                     onChange={(e) => handleChange("linkedin", e.target.value)}
+                    onKeyDown={(e) => e.key === "Enter" && handleUpdate("linkedin")}
+
                     style={{ width: "70%" }}
                   />
                 ) : (
@@ -293,6 +306,8 @@ const ProfilePage = () => {
                     ref={githubRef}
                     defaultValue={user.github}
                     onChange={(e) => handleChange("github", e.target.value)}
+                    onKeyDown={(e) => e.key === "Enter" && handleUpdate("github")}
+
                     style={{ width: "70%" }}
                   />
                 ) : (

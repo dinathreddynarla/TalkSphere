@@ -8,7 +8,7 @@
   width: 97%;
   overflow-y: auto;
   overflow-x: hidden;
-  scroll-behavior: smooth;
+  scroll-behavior:smooth;
   scrollbar-width: none;
   background: linear-gradient(135deg, #E9F5F2, #E9F5F2);
 }
@@ -16,6 +16,7 @@
 /* Profile Card */
 .profile-card {
   display: flex;
+  flex-direction: column;
   padding: 15px;
   background: #FFFFFF;
   border-radius: 10px;
@@ -40,11 +41,19 @@
   background: #E9F5F2;
   border-radius: 8px;
   padding: 10px;
-  width: 25%;
+  width: 100%;
+}
+
+.profile-pic-wrapper {
+  position: relative;
+  display: inline-block;
+  width: 20%; 
+  max-width: 200px; 
+  margin-bottom: 1%;
 }
 
 .profile-pic {
-  width: 80%;
+  width: 100%; 
   height: auto;
   border-radius: 50%;
   object-fit: cover;
@@ -54,21 +63,40 @@
 }
 
 .profile-pic:hover {
-  transform: scale(1.1);
+  transform: scale(1.05);
 }
 
-.buttons {
+.edit-icon-btn {
+  position: absolute;
+  top: 5%;
+  right: 7%;
+  background: white;
+  border: none;
+  border-radius: 50%;
+  padding: 5px;
+  cursor: pointer;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
+  color: #2D6A4F;
+  transition: color 0.3s;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.edit-icon-btn svg {
+  font-size: 1.3rem;
+  color: #2D6A4F;
+  transition: color 0.3s;
+}
+.edit-icon-btn svg:hover{
+
+  color: #1E5038;
 }
 
 /* Buttons */
-.update-pic-btn,
 .change-password-btn {
   padding: 10px;
-  width: 90%;
+  width: 30%;
   background-color: #2D6A4F !important;
   color: white !important;
   border: none;
@@ -79,8 +107,6 @@
   font-size: 16px;
 
 }
-
-.update-pic-btn:hover,
 .change-password-btn:hover {
   background-color: #1E5038 !important; 
   color: white !important;
@@ -115,44 +141,24 @@
   border: 1px solid #E9F5F2;
 }
 
-.info-section:hover {
-  transform: translateY(-5px);
-}
+
 
 /* Titles and Text */
 .profile-card h1 {
   color: #1E5038;
   margin-bottom: 10px;
   text-align: center;
-  font-size: 22px;
+  font-size: 2rem;
 }
 
 .info-section h3 {
   color: #2D6A4F;
-  font-size: 16px;
+  font-size: 1.2rem;
   margin-bottom: 8px;
 }
-
-.profile-field label {
-  font-weight: bold;
-  color: #2D6A4F;
-  font-size: 14px;
-}
-
-.profile-field span {
-  color: #1E5038;
-  margin-left: 5px;
-  font-size: 13px;
-}
-
-.edit-icon {
-  cursor: pointer;
-  color: #2D6A4F;
-  transition: color 0.3s;
-}
-
-.edit-icon:hover {
-  color: #1E5038;
+.info-section p {
+  font-size: 1.1rem;
+  margin-bottom: 8px;
 }
 
 /* Responsive Design */
@@ -179,18 +185,21 @@
     width: 100%;
   }
 
-  .update-pic-btn,
   .change-password-btn {
     padding: 10px;
     font-size: 18px;
   }
 
   .profile-card h1 {
-    font-size: 20px;
+    font-size: 1.5rem;
   }
 
   .info-section h3 {
-    font-size: 14px;
+    font-size: 1.1rem;
+  }
+
+  .info-section p {
+    font-size: 1rem;
   }
 }
 
@@ -208,6 +217,13 @@
   .profile-pic-container {
     width: 100%;
   }
+  .profile-pic-wrapper {
+ 
+    width: 50%; 
+  }
+  .edit-icon-btn{
+    right : -2%;
+  }
 
   .profile-right {
     width: 100%;
@@ -216,8 +232,6 @@
   .info-section {
     width: 100%;
   }
-
-  .update-pic-btn,
   .change-password-btn {
     padding: 8px;
     font-size: 16px;
@@ -225,18 +239,35 @@
   }
 
   .profile-card h1 {
-    font-size: 18px;
+    font-size: 1.5rem;
   }
 
   .info-section h3 {
-    font-size: 13px;
+    font-size: 1.1rem;
   }
 
-  .profile-field label {
-    font-size: 12px;
+  .info-section p {
+    font-size: 0.9rem;
+  }
+  .ant-picker {
+    display: block;
+    margin: 0 auto;
+    width: 100% !important;
+    text-align: center;
   }
 
-  .profile-field span {
-    font-size: 11px;
+  .ant-picker-input {
+    text-align: center;
   }
 }
+
+
+
+
+
+
+
+
+
+
+
