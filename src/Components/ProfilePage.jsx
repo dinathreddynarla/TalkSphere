@@ -24,7 +24,9 @@ const ProfilePage = () => {
   const [editedValues, setEditedValues] = useState({});
   const [profilePic, setProfilePic] = useState(user?.profilePic || defaultProfilePic);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [loadingState , setLoadingState] = useState(false)
   const fileRef = useRef(null);
+  const [previewImage, setPreviewImage] = useState(null);
 
   
   const nameRef = useRef(null);
@@ -135,10 +137,35 @@ const ProfilePage = () => {
     setIsModalOpen(true);
   };
 
-  const handleFileChange = ({ file }) => {
-    console.log("File Object:", file);
-    fileRef.current = file; // Ensure a valid file reference
-    message.info(fileRef.current.name)
+  const allowedTypes = ["image/jpeg", "image/jpg", "image/png"];
+  const maxSize = 2 * 1024 * 1024;
+
+  const beforeUpload = (file) => {
+    if (!allowedTypes.includes(file.type)) {
+      message.error("Only JPG, JPEG, and PNG files are allowed!");
+      return Upload.LIST_IGNORE; // Prevent file from being added
+    }
+  
+    if (file.size > maxSize) {
+      message.error("File size must be under 2MB!");
+      return Upload.LIST_IGNORE; // Prevent file from being added
+    }
+  
+    return false; // Allow valid files
+  };
+  
+  // Handle file selection and preview
+  const handleFileChange = ({ fileList , file }) => {
+    if (fileList.length === 0) {
+      // If no file is left after removal
+      setPreviewImage(null);
+      fileRef.current = null;
+      return;
+    }
+    fileRef.current = file;
+    console.log(file);
+    
+    setPreviewImage(URL.createObjectURL(file)); // Create preview URL
   };
   
 
@@ -147,7 +174,7 @@ const ProfilePage = () => {
       message.error("Please select a file first.");
       return;
     }
-    
+    setLoadingState(true)
     const formData = new FormData();
     formData.append("image", fileRef.current);
     try {
@@ -170,6 +197,7 @@ const ProfilePage = () => {
       console.log(error);
       
     }
+    setLoadingState(false)
   };
 
   if (!user) {
@@ -383,19 +411,34 @@ const ProfilePage = () => {
         <Button key="cancel" onClick={() => setIsModalOpen(false)}>
           Cancel
         </Button>,
-        <Button key="upload" type="primary" onClick={handleUpload}>
+        <Button key="upload" type="primary" onClick={handleUpload} loading={loadingState}>
           Confirm Upload
         </Button>,
       ]}
     >
       <Upload
-        beforeUpload={() => false} // Prevent auto-upload, handle manually
-        onChange={handleFileChange}
-        showUploadList={true}
+       beforeUpload={beforeUpload} // Validate before upload
+       onChange={handleFileChange} // Handle preview
+       showUploadList={true} // Show selected files
         maxCount={1} // Ensure only one file can be uploaded
       >
         <Button icon={<UploadOutlined />}>Choose File</Button>
       </Upload>
+      {previewImage && (
+        <div style={{ marginTop: 20, textAlign: "center" }}>
+          <img
+            src={previewImage}
+            alt="Preview"
+            style={{
+              width: 150,
+              height: 150,
+              objectFit: "cover",
+              borderRadius: "50%",
+              border: "2px solid #ddd",
+            }}
+          />
+        </div>
+      )}
     </Modal>
     </div>
   );
