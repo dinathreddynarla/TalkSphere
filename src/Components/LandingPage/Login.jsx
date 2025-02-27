@@ -45,7 +45,7 @@ const Login = ({ setIsLoginForm, roomID, setLoading }) => {
     const handleGuestLogin = async () => {
         setButtonLoading("guestlogin", true);
         try {
-            await guestLogin();
+            await loginWithEmailPassword("anonymous@gmail.com", "Guest@1234");
             message.success("Logged in as Guest! Redirecting...");
             handleNavigation(roomID ? `/room/${roomID}` : "/dashboard");
         } catch {

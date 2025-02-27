@@ -239,11 +239,7 @@ const MeetingsPage = () => {
   placeholder="Pick date"
   onChange={(date) => setFormData({ ...formData, date })}
   disabledDate={(current) => current && current < dayjs().startOf("day")}
-
-  
 />
-
-
           </Form.Item>
           <div
             className="modal-buttons"
