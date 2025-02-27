@@ -1,14 +1,16 @@
 import React, { useEffect, useState, useRef } from "react";
+import  axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { EditOutlined, LockOutlined } from "@ant-design/icons";
+import { EditOutlined, LockOutlined , UploadOutlined } from "@ant-design/icons";
 import { updateUserProfile } from "../Redux/userSlice";
 import { FaEdit, FaCheck, FaLock, FaUserAlt, FaPhone, FaBirthdayCake, FaGenderless, FaLinkedin, FaGithub } from "react-icons/fa";
-import { Skeleton, Input, Button, message, Modal ,Select, DatePicker } from "antd";
+import { Skeleton, Input, Button, message, Modal ,Select, DatePicker , Upload } from "antd";
 import dayjs from "dayjs";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 import "../Styles/ProfilePage.css";
-import { passwordReset } from "../services/authService";
+import { getFreshToken, passwordReset } from "../services/authService";
+import { baseUrl } from "../App";
 
 const defaultProfilePic = "https://img.freepik.com/premium-vector/vector-flat-illustration-grayscale-avatar-user-profile-person-icon-gender-neutral-silhouette-profile-picture-suitable-social-media-profiles-icons-screensavers-as-templatex9xa_719432-875.jpg?semt=ais_hybrid"; 
 
@@ -21,6 +23,9 @@ const ProfilePage = () => {
   const [editMode, setEditMode] = useState({});
   const [editedValues, setEditedValues] = useState({});
   const [profilePic, setProfilePic] = useState(user?.profilePic || defaultProfilePic);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const fileRef = useRef(null);
+
   
   const nameRef = useRef(null);
   const genderRef = useRef(null);
@@ -123,8 +128,48 @@ const ProfilePage = () => {
     }
   };
 
+  // const handleProfilePicUpdate = () => {
+  //   message.info("Profile pic update functionality coming soon!");
+  // };
   const handleProfilePicUpdate = () => {
-    message.info("Profile pic update functionality coming soon!");
+    setIsModalOpen(true);
+  };
+
+  const handleFileChange = ({ file }) => {
+    console.log("File Object:", file);
+    fileRef.current = file; // Ensure a valid file reference
+    message.info(fileRef.current.name)
+  };
+  
+
+  const handleUpload = async () => {
+    if (!fileRef.current) {
+      message.error("Please select a file first.");
+      return;
+    }
+    
+    const formData = new FormData();
+    formData.append("image", fileRef.current);
+    try {
+      const token = await getFreshToken();
+      const response = await axios.post(`${baseUrl}/users/updatepic`, formData, {
+        headers: { "Content-Type": "multipart/form-data" , Authorization: `Bearer ${token}`},
+      });
+      
+      
+      if (response.data.success) {
+        setProfilePic(response.data.imageUrl);
+        dispatch(updateUserProfile({ profilePic: response.data.imageUrl }));
+        message.success("Profile picture updated successfully!");
+        setIsModalOpen(false);
+      } else {
+        message.error(response.data.message || "Upload failed");
+      }
+    } catch (error) {
+      message.error("An error occurred while uploading.");
+      console.log(error);
+      
+    }
   };
 
   if (!user) {
@@ -329,6 +374,29 @@ const ProfilePage = () => {
           </div>
         </div>
       </div>
+       {/* Profile Picture Upload Modal */}
+       <Modal
+      title="Upload Profile Picture"
+      open={isModalOpen}
+      onCancel={() => setIsModalOpen(false)}
+      footer={[
+        <Button key="cancel" onClick={() => setIsModalOpen(false)}>
+          Cancel
+        </Button>,
+        <Button key="upload" type="primary" onClick={handleUpload}>
+          Confirm Upload
+        </Button>,
+      ]}
+    >
+      <Upload
+        beforeUpload={() => false} // Prevent auto-upload, handle manually
+        onChange={handleFileChange}
+        showUploadList={true}
+        maxCount={1} // Ensure only one file can be uploaded
+      >
+        <Button icon={<UploadOutlined />}>Choose File</Button>
+      </Upload>
+    </Modal>
     </div>
   );
 };
