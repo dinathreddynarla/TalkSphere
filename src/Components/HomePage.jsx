@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { Card, Button, Input, Row, Col } from 'antd';
+import { Card, Button, Input, Row, Col ,message } from 'antd';
 import { VideoCameraOutlined, EnterOutlined } from '@ant-design/icons';
 import Cookies from "js-cookie";
 import { getFreshToken } from '../services/authService';
@@ -39,6 +39,10 @@ const HomePage = () => {
   }
 
   const handleJoin = useCallback(() => {
+    if(roomID.trim()==""){
+      message.error("Enter meeting Id")
+      return;
+    }
     navigate(`/room/${roomID}`);
   }, [navigate, roomID]);
 
