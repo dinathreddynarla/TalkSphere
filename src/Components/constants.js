@@ -1,3 +1,3 @@
-export const APP_ID =1813282943 ;
-export const SERVER_SECRET ="1bc427dc520ad13eb616d0dcf40c55af" ;
+export const APP_ID =1477086796 ;
+export const SERVER_SECRET ="046e7e498943a27c62a4f59c8e30501f" ;
 
